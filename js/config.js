@@ -1,8 +1,8 @@
+window.SUPABASE_URL = "https://icyzyhhtkfrpsgmyaoss.supabase.co";
 
-const SUPABASE_URL = "https://icyzyhhtkfrpsgmyaoss.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6MMwfOA08gEZvMDMeP0svQ_8C8S_2qh";
+window.SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6MMwfOA08gEZvMDMeP0svQ_8C8S_2qh";
 
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+window.supabaseClient = window.supabase.createClient(
+    window.SUPABASE_URL,
+    window.SUPABASE_PUBLISHABLE_KEY
 );
