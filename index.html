@@ -1,1 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="A private collection of beautiful memories and moments."
+    >
+
+    <title>Our Story ♡</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+    <!-- ============================= -->
+    <!-- BACKGROUND -->
+    <!-- ============================= -->
+
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+
+    <!-- ============================= -->
+    <!-- NAVIGATION -->
+    <!-- ============================= -->
+
+    <header class="site-header">
+
+        <a href="index.html" class="brand">
+
+            <span class="brand-symbol">♡</span>
+
+            <span>Our Story</span>
+
+        </a>
+
+        <a href="login.html" class="admin-link">
+            Private
+        </a>
+
+    </header>
+
+
+    <!-- ============================= -->
+    <!-- HERO -->
+    <!-- ============================= -->
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="hero-heart">
+                    ♡
+                </div>
+
+                <p class="hero-kicker">
+                    A COLLECTION OF OUR MOMENTS
+                </p>
+
+                <h1>
+                    Our
+                    <em>Story</em>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Every date holds a memory.
+                    <br>
+                    Every memory holds a piece of us.
+                </p>
+
+                <a href="#timeline" class="begin-button">
+
+                    <span>
+                        Begin the journey
+                    </span>
+
+                    <span class="arrow">
+                        ↓
+                    </span>
+
+                </a>
+
+            </div>
+
+            <div class="scroll-indicator">
+
+                <span></span>
+
+                <small>
+                    SCROLL TO EXPLORE
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================= -->
+        <!-- TIMELINE HEADER -->
+        <!-- ============================= -->
+
+        <section id="timeline" class="timeline-section">
+
+            <div class="section-intro">
+
+                <p class="section-kicker">
+                    OUR JOURNEY
+                </p>
+
+                <h2>
+                    Moments that
+                    <em>became us.</em>
+                </h2>
+
+                <p>
+                    The little things, the big things,
+                    and everything in between.
+                </p>
+
+            </div>
+
+
+            <!-- CONTROLS -->
+
+            <div class="timeline-controls">
+
+                <div class="filter-buttons">
+
+                    <button
+                        class="filter-button active"
+                        data-filter="all"
+                    >
+                        All
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-filter="milestone"
+                    >
+                        Milestones
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-filter="date"
+                    >
+                        Dates
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-filter="travel"
+                    >
+                        Travels
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-filter="celebration"
+                    >
+                        Celebrations
+                    </button>
+
+                </div>
+
+
+                <div class="sort-control">
+
+                    <label for="sortOrder">
+                        VIEW
+                    </label>
+
+                    <select id="sortOrder">
+
+                        <option value="asc">
+                            Oldest first
+                        </option>
+
+                        <option value="desc">
+                            Newest first
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- TIMELINE -->
+
+            <div
+                id="timelineContainer"
+                class="timeline"
+            >
+
+                <div class="loading-state">
+
+                    <div class="loading-heart">
+                        ♡
+                    </div>
+
+                    <p>
+                        Gathering our memories...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMPTY STATE -->
+
+            <div
+                id="emptyState"
+                class="empty-state hidden"
+            >
+
+                <div>
+                    ♡
+                </div>
+
+                <h3>
+                    Nothing here yet.
+                </h3>
+
+                <p>
+                    Some stories are still waiting
+                    to be written.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ============================= -->
+        <!-- CLOSING -->
+        <!-- ============================= -->
+
+        <section class="closing-section">
+
+            <div class="closing-heart">
+                ♥
+            </div>
+
+            <p class="section-kicker">
+                TO BE CONTINUED
+            </p>
+
+            <h2>
+                And this is only
+                <em>the beginning.</em>
+            </h2>
+
+            <p>
+                There are still so many dates
+                waiting to become memories.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- ============================= -->
+    <!-- FOOTER -->
+    <!-- ============================= -->
+
+    <footer class="site-footer">
+
+        <div class="footer-heart">
+            ♡
+        </div>
+
+        <p>
+            Made with love, for the moments
+            worth remembering.
+        </p>
+
+        <span>
+            OUR STORY
+        </span>
+
+    </footer>
+
+
+    <!-- ============================= -->
+    <!-- SCRIPTS -->
+    <!-- ============================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/config.js"></script>
+
+    <script src="js/timeline.js"></script>
+
+</body>
+
+</html>
