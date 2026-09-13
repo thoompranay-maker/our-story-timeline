@@ -9,27 +9,31 @@ loginForm.addEventListener("submit", async function (event) {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    // Basic validation
-    if (!email || !password) {
-        loginMessage.textContent = "Please enter your email and password.";
-        return;
-    }
+    loginMessage.textContent = "Connecting to Our Story...";
 
-    loginMessage.textContent = "Signing in...";
     loginButton.disabled = true;
     loginButton.textContent = "Signing in...";
 
     try {
+
+        console.log("Starting Supabase login...");
+        console.log("Supabase URL:", SUPABASE_URL);
+        console.log("Email:", email);
 
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password
         });
 
-        if (error) {
-            console.error("Supabase Login Error:", error);
+        console.log("Supabase response:", data);
+        console.log("Supabase error:", error);
 
-            loginMessage.textContent = error.message;
+        if (error) {
+
+            loginMessage.textContent =
+                "Login failed: " + error.message;
+
+            console.error("SUPABASE AUTH ERROR:", error);
 
             loginButton.disabled = false;
             loginButton.textContent = "Enter Our Story";
@@ -37,18 +41,21 @@ loginForm.addEventListener("submit", async function (event) {
             return;
         }
 
-        console.log("Login successful:", data);
-
         loginMessage.textContent = "Login successful ❤️";
 
-        window.location.href = "admin.html";
+        console.log("USER:", data.user);
+
+        setTimeout(() => {
+            window.location.href = "admin.html";
+        }, 500);
 
     } catch (error) {
 
-        console.error("Unexpected Login Error:", error);
+        console.error("CRITICAL ERROR:", error);
 
-        loginMessage.textContent =
-            "Something went wrong. Please check your Supabase configuration.";
+        loginMessage.innerHTML =
+            "<strong>Connection error</strong><br>" +
+            (error.message || error);
 
         loginButton.disabled = false;
         loginButton.textContent = "Enter Our Story";
