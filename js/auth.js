@@ -9,31 +9,25 @@ loginForm.addEventListener("submit", async function (event) {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    loginMessage.textContent = "Connecting to Our Story...";
+    loginMessage.textContent = "Signing in...";
 
     loginButton.disabled = true;
     loginButton.textContent = "Signing in...";
 
     try {
 
-        console.log("Starting Supabase login...");
-        console.log("Supabase URL:", SUPABASE_URL);
-        console.log("Email:", email);
-
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-        console.log("Supabase response:", data);
-        console.log("Supabase error:", error);
+        const { data, error } =
+            await window.supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
 
         if (error) {
 
+            console.error("Supabase Login Error:", error);
+
             loginMessage.textContent =
                 "Login failed: " + error.message;
-
-            console.error("SUPABASE AUTH ERROR:", error);
 
             loginButton.disabled = false;
             loginButton.textContent = "Enter Our Story";
@@ -41,9 +35,9 @@ loginForm.addEventListener("submit", async function (event) {
             return;
         }
 
-        loginMessage.textContent = "Login successful ❤️";
+        console.log("Login successful:", data);
 
-        console.log("USER:", data.user);
+        loginMessage.textContent = "Login successful ❤️";
 
         setTimeout(() => {
             window.location.href = "admin.html";
@@ -51,11 +45,11 @@ loginForm.addEventListener("submit", async function (event) {
 
     } catch (error) {
 
-        console.error("CRITICAL ERROR:", error);
+        console.error("Connection Error:", error);
 
-        loginMessage.innerHTML =
-            "<strong>Connection error</strong><br>" +
-            (error.message || error);
+        loginMessage.textContent =
+            "Connection error: " +
+            (error.message || "Unable to connect to Supabase.");
 
         loginButton.disabled = false;
         loginButton.textContent = "Enter Our Story";
