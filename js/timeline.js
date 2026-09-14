@@ -239,21 +239,63 @@ function setupSearch() {
 
 function getFilteredMemories() {
 
-    if (currentFilter === "all") {
+    let memories = [...allMemories];
 
-        return [...allMemories];
+
+    /* -----------------------------
+       CATEGORY FILTER
+       ----------------------------- */
+
+    if (currentFilter !== "all") {
+
+        memories = memories.filter(
+            memory =>
+                String(memory.category || "")
+                    .toLowerCase() ===
+                currentFilter.toLowerCase()
+        );
 
     }
 
-    return allMemories.filter(
-        memory =>
-            String(memory.category || "")
-                .toLowerCase() ===
-            currentFilter.toLowerCase()
-    );
+
+    /* -----------------------------
+       SEARCH
+       ----------------------------- */
+
+    if (currentSearch) {
+
+        memories = memories.filter(
+            memory => {
+
+                const searchableText = [
+
+                    memory.title,
+
+                    memory.description,
+
+                    memory.location,
+
+                    memory.category
+
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+
+                return searchableText.includes(
+                    currentSearch
+                );
+
+            }
+        );
+
+    }
+
+
+    return memories;
 
 }
-
 
 /* =========================================================
    RENDER MAIN TIMELINE
