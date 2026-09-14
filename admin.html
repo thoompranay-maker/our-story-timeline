@@ -190,6 +190,48 @@
 
                 </div>
 
+                <!-- PHOTO -->
+
+<div class="form-group photo-upload-group">
+
+    <label for="memoryPhoto">
+        Photograph
+        <span>(Optional)</span>
+    </label>
+
+    <input
+        type="file"
+        id="memoryPhoto"
+        accept="image/jpeg,image/png,image/webp"
+    >
+
+    <div
+        id="photoPreview"
+        class="photo-preview hidden"
+    >
+
+        <img
+            id="photoPreviewImage"
+            src=""
+            alt="Photo preview"
+        >
+
+        <button
+            type="button"
+            id="removePhotoButton"
+            class="remove-photo-button"
+        >
+            Remove photo
+        </button>
+
+    </div>
+
+    <p class="photo-help">
+        JPG, PNG or WebP · Maximum 5 MB
+    </p>
+
+</div>
+
 
                 <div class="form-actions">
 
