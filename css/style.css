@@ -1281,6 +1281,19 @@ em {
         font-size: 3.2rem;
     }
 
+    .timeline-search {
+        margin-bottom: 20px;
+    }
+
+    .timeline-search input {
+        height: 48px;
+        font-size: 0.74rem;
+    }
+
+    .search-icon {
+        width: 42px;
+    }
+   
 }
 
 
