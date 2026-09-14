@@ -174,6 +174,64 @@ function setupSorting() {
 
 }
 
+/* =========================================================
+   SEARCH SETUP
+   ========================================================= */
+
+function setupSearch() {
+
+    if (!memorySearch) {
+        return;
+    }
+
+    memorySearch.addEventListener(
+        "input",
+        () => {
+
+            currentSearch =
+                memorySearch.value
+                    .trim()
+                    .toLowerCase();
+
+            if (clearSearch) {
+
+                clearSearch.classList.toggle(
+                    "hidden",
+                    currentSearch.length === 0
+                );
+
+            }
+
+            renderTimeline();
+
+        }
+    );
+
+
+    if (clearSearch) {
+
+        clearSearch.addEventListener(
+            "click",
+            () => {
+
+                memorySearch.value = "";
+
+                currentSearch = "";
+
+                clearSearch.classList.add(
+                    "hidden"
+                );
+
+                memorySearch.focus();
+
+                renderTimeline();
+
+            }
+        );
+
+    }
+
+}
 
 /* =========================================================
    FILTER MEMORIES
