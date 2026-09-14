@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupSorting();
 
+    setupSearch();
+
 });
 
 
