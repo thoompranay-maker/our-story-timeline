@@ -1316,3 +1316,268 @@ em {
     }
 
 }
+
+
+/* =========================================================
+   FULL-SCREEN PHOTO VIEWER
+   ========================================================= */
+
+.photo-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(110, 38, 62, 0.22),
+            rgba(8, 4, 7, 0.96) 65%
+        );
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+}
+
+
+/* ---------------------------------------------------------
+   HIDDEN STATE
+   --------------------------------------------------------- */
+
+.photo-viewer.hidden {
+    display: flex !important;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+/* ---------------------------------------------------------
+   VIEWER CONTENT
+   --------------------------------------------------------- */
+
+.photo-viewer-content {
+    position: relative;
+
+    width: min(1100px, 100%);
+    max-height: 92vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    animation: photoViewerEnter 0.4s ease both;
+}
+
+
+.photo-viewer-image {
+    display: block;
+}
+
+
+/* ---------------------------------------------------------
+   PHOTO
+   --------------------------------------------------------- */
+
+#photoViewerImage {
+    display: block;
+
+    max-width: 100%;
+    max-height: 78vh;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border: 1px solid rgba(228, 201, 145, 0.22);
+
+    box-shadow:
+        0 30px 100px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+
+    border-radius: 3px;
+
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+
+/* ---------------------------------------------------------
+   CLOSE BUTTON
+   --------------------------------------------------------- */
+
+.photo-viewer-close {
+    position: fixed;
+
+    top: 22px;
+    right: 22px;
+
+    z-index: 10001;
+
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid rgba(228, 201, 145, 0.28);
+    border-radius: 50%;
+
+    background: rgba(22, 13, 18, 0.72);
+
+    color: var(--cream);
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 1.65rem;
+    font-weight: 300;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.photo-viewer-close:hover {
+    transform: rotate(90deg);
+
+    color: var(--gold-light);
+
+    border-color: rgba(228, 201, 145, 0.55);
+
+    background: rgba(110, 38, 62, 0.45);
+}
+
+
+/* ---------------------------------------------------------
+   CAPTION
+   --------------------------------------------------------- */
+
+.photo-viewer-caption {
+    max-width: 700px;
+
+    margin-top: 17px;
+
+    color: var(--cream-soft);
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.25rem;
+    font-weight: 500;
+
+    letter-spacing: 0.02em;
+
+    text-align: center;
+
+    text-shadow:
+        0 2px 15px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ---------------------------------------------------------
+   OPEN ANIMATION
+   --------------------------------------------------------- */
+
+@keyframes photoViewerEnter {
+
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   PREVENT PAGE SCROLL WHILE OPEN
+   --------------------------------------------------------- */
+
+body.photo-viewer-open {
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   MOBILE PHOTO VIEWER
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .photo-viewer {
+        padding: 18px;
+    }
+
+    .photo-viewer-content {
+        width: 100%;
+        max-height: 90vh;
+    }
+
+    #photoViewerImage {
+        max-width: 100%;
+        max-height: 72vh;
+
+        border-radius: 2px;
+    }
+
+    .photo-viewer-close {
+        top: 15px;
+        right: 15px;
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 1.4rem;
+    }
+
+    .photo-viewer-caption {
+        margin-top: 13px;
+
+        font-size: 1.05rem;
+
+        padding: 0 15px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .photo-viewer,
+    .photo-viewer-content,
+    .photo-viewer-close {
+        animation: none !important;
+        transition: none !important;
+    }
+
+}
