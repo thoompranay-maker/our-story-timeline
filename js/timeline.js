@@ -310,15 +310,21 @@ function renderTimeline() {
 
     updateMemoryCount(memories.length);
 
-    if (!memories.length) {
+if (!memories.length) {
 
-        emptyState.classList.remove("hidden");
+    emptyState.classList.remove("hidden");
 
-        return;
+    updateSearchResultInfo(0);
 
-    }
+    return;
 
-    emptyState.classList.add("hidden");
+}
+
+emptyState.classList.add("hidden");
+
+updateSearchResultInfo(
+    memories.length
+);
 
 
     let previousYear = null;
