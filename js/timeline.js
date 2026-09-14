@@ -32,6 +32,12 @@ const filterButtons =
 const memoryCount =
     document.getElementById("memoryCount");
 
+const memorySearch =
+    document.getElementById("memorySearch");
+
+const clearSearch =
+    document.getElementById("clearSearch");
+
 const onThisDay =
     document.getElementById("onThisDay");
 
