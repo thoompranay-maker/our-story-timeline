@@ -11,6 +11,7 @@
 let allMemories = [];
 let currentFilter = "all";
 let currentSort = "asc";
+let currentSearch = "";
 
 
 /* =========================================================
