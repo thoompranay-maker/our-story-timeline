@@ -322,3 +322,17 @@ button {
 .photo-preview.hidden {
     display: none;
 }
+
+.admin-memory-photo {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.admin-memory-photo img {
+    display: block;
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+}
