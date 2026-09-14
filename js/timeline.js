@@ -377,6 +377,88 @@ updateSearchResultInfo(
 
 }
 
+/* =========================================================
+   SEARCH RESULT INFO
+   ========================================================= */
+
+function updateSearchResultInfo(count) {
+
+    let existing =
+        document.getElementById(
+            "searchResultInfo"
+        );
+
+
+    if (!currentSearch) {
+
+        if (existing) {
+            existing.remove();
+        }
+
+        return;
+
+    }
+
+
+    if (!existing) {
+
+        existing =
+            document.createElement("div");
+
+        existing.id =
+            "searchResultInfo";
+
+        existing.className =
+            "search-result-info";
+
+
+        const controls =
+            document.querySelector(
+                ".timeline-controls"
+            );
+
+
+        if (controls) {
+
+            controls.parentNode.insertBefore(
+                existing,
+                controls
+            );
+
+        }
+
+    }
+
+
+    const safeSearch =
+        escapeHTML(currentSearch);
+
+
+    if (count === 0) {
+
+        existing.innerHTML = `
+            No memories found for
+            <strong>"${safeSearch}"</strong>
+        `;
+
+    } else if (count === 1) {
+
+        existing.innerHTML = `
+            1 memory found for
+            <strong>"${safeSearch}"</strong>
+        `;
+
+    } else {
+
+        existing.innerHTML = `
+            ${count} memories found for
+            <strong>"${safeSearch}"</strong>
+        `;
+
+    }
+
+}
+
 
 /* =========================================================
    YEAR CHAPTER
