@@ -430,6 +430,104 @@ em {
     margin-top: 3px;
 }
 
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.timeline-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto 25px;
+    border: 1px solid rgba(228, 201, 145, 0.15);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.035);
+    transition:
+        border-color 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.timeline-search:focus-within {
+    border-color: rgba(201, 166, 107, 0.42);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.16);
+}
+
+.search-icon {
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 1.15rem;
+    pointer-events: none;
+}
+
+.timeline-search input {
+    flex: 1;
+    min-width: 0;
+    height: 52px;
+    padding: 0 8px 0 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--cream);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+}
+
+.timeline-search input::placeholder {
+    color: rgba(216, 203, 192, 0.48);
+}
+
+.timeline-search input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.clear-search {
+    width: 42px;
+    height: 42px;
+    margin-right: 5px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        color 0.25s ease,
+        background 0.25s ease;
+}
+
+.clear-search:hover {
+    background: rgba(201, 166, 107, 0.08);
+    color: var(--gold-light);
+}
+
+
+/* =========================================================
+   SEARCH RESULTS STATE
+   ========================================================= */
+
+.search-result-info {
+    margin: -8px auto 30px;
+    color: var(--muted);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+
+.search-result-info strong {
+    color: var(--gold-light);
+    font-weight: 400;
+}
+
 
 /* =========================================================
    CONTROLS
