@@ -1,3 +1,4 @@
+
 const memoryForm = document.getElementById("memoryForm");
 
 const memoryFormSection =
@@ -25,47 +26,63 @@ const formMessage =
     document.getElementById("formMessage");
 
 
-// --------------------------------------------------
+// ======================================================
+// PHOTO ELEMENTS
+// ======================================================
+
+const memoryPhoto =
+    document.getElementById("memoryPhoto");
+
+const photoPreview =
+    document.getElementById("photoPreview");
+
+const photoPreviewImage =
+    document.getElementById("photoPreviewImage");
+
+const removePhotoButton =
+    document.getElementById("removePhotoButton");
+
+
+let selectedPhotoFile = null;
+
+let existingPhotoUrl = null;
+
+let photoWasRemoved = false;
+
+
+// ======================================================
 // CHECK LOGIN
-// --------------------------------------------------
+// ======================================================
 
 async function checkAuthentication() {
 
     const { data, error } =
         await window.supabaseClient.auth.getSession();
 
-    if (error) {
-
-        console.error(error);
+    if (error || !data.session) {
 
         window.location.href = "login.html";
 
         return;
     }
-
-    if (!data.session) {
-
-        window.location.href = "login.html";
-
-        return;
-    }
-
-    console.log("Authenticated user:", data.session.user.email);
 
     loadMemories();
 }
 
 
-// --------------------------------------------------
+// ======================================================
 // LOAD MEMORIES
-// --------------------------------------------------
+// ======================================================
 
 async function loadMemories() {
 
     memoriesList.innerHTML =
         '<div class="loading">Loading memories...</div>';
 
-    const ascending = sortOrder.value === "asc";
+
+    const ascending =
+        sortOrder.value === "asc";
+
 
     const { data, error } =
         await window.supabaseClient
@@ -81,12 +98,12 @@ async function loadMemories() {
 
     if (error) {
 
-        console.error("Load memories error:", error);
+        console.error(error);
 
         memoriesList.innerHTML =
             `<div class="error">
                 Unable to load memories.<br>
-                ${error.message}
+                ${escapeHTML(error.message)}
             </div>`;
 
         return;
@@ -108,6 +125,7 @@ async function loadMemories() {
 
     memoriesList.innerHTML = "";
 
+
     data.forEach(memory => {
 
         memoriesList.appendChild(
@@ -115,22 +133,51 @@ async function loadMemories() {
         );
 
     });
+
 }
 
 
-// --------------------------------------------------
+// ======================================================
 // CREATE MEMORY CARD
-// --------------------------------------------------
+// ======================================================
 
 function createMemoryCard(memory) {
 
-    const card = document.createElement("article");
+    const card =
+        document.createElement("article");
 
     card.className = "memory-card";
 
-    const date = formatDate(memory.event_date);
+
+    const date =
+        formatDate(memory.event_date);
+
+
+    const icon =
+        getCategoryIcon(memory.category);
+
+
+    const photoHTML =
+        memory.photo_url
+        ?
+        `
+        <div class="admin-memory-photo">
+
+            <img
+                src="${escapeAttribute(memory.photo_url)}"
+                alt="${escapeAttribute(memory.title)}"
+                loading="lazy"
+            >
+
+        </div>
+        `
+        :
+        "";
+
 
     card.innerHTML = `
+
+        ${photoHTML}
 
         <div class="memory-date">
             ${date}
@@ -139,8 +186,8 @@ function createMemoryCard(memory) {
         <div class="memory-content">
 
             <div class="memory-category">
-                ${getCategoryIcon(memory.category)}
-                ${memory.category || "memory"}
+                ${icon}
+                ${formatCategory(memory.category)}
             </div>
 
             <h3>
@@ -173,14 +220,12 @@ function createMemoryCard(memory) {
 
             <button
                 class="edit-button"
-                data-id="${memory.id}"
             >
                 Edit
             </button>
 
             <button
                 class="delete-button"
-                data-id="${memory.id}"
             >
                 Delete
             </button>
@@ -191,46 +236,54 @@ function createMemoryCard(memory) {
 
 
     card.querySelector(".edit-button")
-        .addEventListener("click", () => {
-
-            editMemory(memory);
-
-        });
+        .addEventListener(
+            "click",
+            () => editMemory(memory)
+        );
 
 
     card.querySelector(".delete-button")
-        .addEventListener("click", () => {
-
-            deleteMemory(memory.id);
-
-        });
+        .addEventListener(
+            "click",
+            () => deleteMemory(memory)
+        );
 
 
     return card;
+
 }
 
 
-// --------------------------------------------------
+// ======================================================
 // ADD MEMORY
-// --------------------------------------------------
+// ======================================================
 
-addMemoryButton.addEventListener("click", () => {
+addMemoryButton.addEventListener(
+    "click",
+    () => openMemoryForm()
+);
 
-    openMemoryForm();
 
-});
-
-
-// --------------------------------------------------
+// ======================================================
 // OPEN FORM
-// --------------------------------------------------
+// ======================================================
 
 function openMemoryForm(memory = null) {
 
     memoryForm.reset();
 
+
     document.getElementById("memoryId").value =
         memory ? memory.id : "";
+
+
+    selectedPhotoFile = null;
+
+    existingPhotoUrl =
+        memory?.photo_url || null;
+
+    photoWasRemoved = false;
+
 
     if (memory) {
 
@@ -249,7 +302,25 @@ function openMemoryForm(memory = null) {
         document.getElementById("location").value =
             memory.location || "";
 
+
+        if (memory.photo_url) {
+
+            showPhotoPreview(
+                memory.photo_url
+            );
+
+        } else {
+
+            hidePhotoPreview();
+
+        }
+
+    } else {
+
+        hidePhotoPreview();
+
     }
+
 
     formMessage.textContent = "";
 
@@ -258,12 +329,128 @@ function openMemoryForm(memory = null) {
     memoryFormSection.scrollIntoView({
         behavior: "smooth"
     });
+
 }
 
 
-// --------------------------------------------------
+// ======================================================
+// PHOTO SELECT
+// ======================================================
+
+memoryPhoto.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            this.files[0];
+
+
+        if (!file) {
+            return;
+        }
+
+
+        // Maximum 5 MB
+
+        if (file.size > 5 * 1024 * 1024) {
+
+            alert(
+                "This photo is larger than 5 MB. Please choose a smaller image."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        // Validate file type
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+
+        if (!allowedTypes.includes(file.type)) {
+
+            alert(
+                "Please choose a JPG, PNG or WebP image."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        selectedPhotoFile = file;
+
+        photoWasRemoved = false;
+
+
+        const previewUrl =
+            URL.createObjectURL(file);
+
+
+        showPhotoPreview(previewUrl);
+
+    }
+);
+
+
+// ======================================================
+// SHOW PHOTO
+// ======================================================
+
+function showPhotoPreview(source) {
+
+    photoPreviewImage.src = source;
+
+    photoPreview.classList.remove("hidden");
+
+}
+
+
+// ======================================================
+// HIDE PHOTO
+// ======================================================
+
+function hidePhotoPreview() {
+
+    photoPreviewImage.src = "";
+
+    photoPreview.classList.add("hidden");
+
+}
+
+
+// ======================================================
+// REMOVE PHOTO
+// ======================================================
+
+removePhotoButton.addEventListener(
+    "click",
+    function () {
+
+        selectedPhotoFile = null;
+
+        existingPhotoUrl = null;
+
+        photoWasRemoved = true;
+
+        memoryPhoto.value = "";
+
+        hidePhotoPreview();
+
+    }
+);
+
+
+// ======================================================
 // CLOSE FORM
-// --------------------------------------------------
+// ======================================================
 
 function closeMemoryForm() {
 
@@ -273,7 +460,16 @@ function closeMemoryForm() {
 
     document.getElementById("memoryId").value = "";
 
+    selectedPhotoFile = null;
+
+    existingPhotoUrl = null;
+
+    photoWasRemoved = false;
+
+    hidePhotoPreview();
+
     formMessage.textContent = "";
+
 }
 
 
@@ -282,15 +478,126 @@ closeFormButton.addEventListener(
     closeMemoryForm
 );
 
+
 cancelButton.addEventListener(
     "click",
     closeMemoryForm
 );
 
 
-// --------------------------------------------------
+// ======================================================
+// UPLOAD PHOTO
+// ======================================================
+
+async function uploadPhoto(file) {
+
+    const fileExtension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    const uniqueName =
+        `${crypto.randomUUID()}.${fileExtension}`;
+
+
+    const filePath =
+        `${new Date().getFullYear()}/${uniqueName}`;
+
+
+    const { error } =
+        await window.supabaseClient
+            .storage
+            .from("memory-photos")
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl: "3600",
+                    upsert: false
+                }
+            );
+
+
+    if (error) {
+
+        throw error;
+
+    }
+
+
+    const { data } =
+        window.supabaseClient
+            .storage
+            .from("memory-photos")
+            .getPublicUrl(filePath);
+
+
+    return {
+        path: filePath,
+        url: data.publicUrl
+    };
+
+}
+
+
+// ======================================================
+// DELETE PHOTO FROM STORAGE
+// ======================================================
+
+async function deletePhotoFromStorage(
+    photoUrl
+) {
+
+    if (!photoUrl) {
+        return;
+    }
+
+
+    const marker =
+        "/storage/v1/object/public/memory-photos/";
+
+
+    const index =
+        photoUrl.indexOf(marker);
+
+
+    if (index === -1) {
+        return;
+    }
+
+
+    const path =
+        decodeURIComponent(
+            photoUrl.substring(
+                index + marker.length
+            )
+        );
+
+
+    const { error } =
+        await window.supabaseClient
+            .storage
+            .from("memory-photos")
+            .remove([path]);
+
+
+    if (error) {
+
+        console.error(
+            "Photo deletion error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ======================================================
 // SAVE MEMORY
-// --------------------------------------------------
+// ======================================================
 
 memoryForm.addEventListener(
     "submit",
@@ -298,91 +605,211 @@ memoryForm.addEventListener(
 
         event.preventDefault();
 
+
         const memoryId =
             document.getElementById("memoryId").value;
 
-        const memoryData = {
 
-            event_date:
-                document.getElementById("eventDate").value,
-
-            title:
-                document.getElementById("title").value.trim(),
-
-            description:
-                document.getElementById("description").value.trim(),
-
-            category:
-                document.getElementById("category").value,
-
-            location:
-                document.getElementById("location").value.trim(),
-
-            updated_at:
-                new Date().toISOString()
-
-        };
+        const title =
+            document.getElementById("title")
+                .value
+                .trim();
 
 
-        formMessage.textContent =
-            "Saving memory...";
+        const eventDate =
+            document.getElementById("eventDate")
+                .value;
 
 
-        let result;
-
-
-        if (memoryId) {
-
-            // EDIT
-
-            result =
-                await window.supabaseClient
-                    .from("memories")
-                    .update(memoryData)
-                    .eq("id", memoryId);
-
-        } else {
-
-            // CREATE
-
-            result =
-                await window.supabaseClient
-                    .from("memories")
-                    .insert([memoryData]);
-
-        }
-
-
-        if (result.error) {
-
-            console.error(result.error);
+        if (!eventDate || !title) {
 
             formMessage.textContent =
-                "Error: " + result.error.message;
+                "Please enter the date and title.";
 
             return;
         }
 
 
-        formMessage.textContent =
-            "Memory saved ❤️";
+        try {
+
+            formMessage.textContent =
+                selectedPhotoFile
+                ?
+                "Uploading photo..."
+                :
+                "Saving memory...";
 
 
-        setTimeout(() => {
+            let photoUrl =
+                existingPhotoUrl;
 
-            closeMemoryForm();
 
-            loadMemories();
+            let uploadedPhotoPath =
+                null;
 
-        }, 500);
+
+            // ------------------------------------------
+            // UPLOAD NEW PHOTO
+            // ------------------------------------------
+
+            if (selectedPhotoFile) {
+
+                const uploaded =
+                    await uploadPhoto(
+                        selectedPhotoFile
+                    );
+
+
+                photoUrl =
+                    uploaded.url;
+
+
+                uploadedPhotoPath =
+                    uploaded.path;
+
+            }
+
+
+            // ------------------------------------------
+            // REMOVE EXISTING PHOTO
+            // ------------------------------------------
+
+            if (
+                memoryId &&
+                photoWasRemoved &&
+                existingPhotoUrl
+            ) {
+
+                await deletePhotoFromStorage(
+                    existingPhotoUrl
+                );
+
+                photoUrl = null;
+
+            }
+
+
+            const memoryData = {
+
+                event_date: eventDate,
+
+                title: title,
+
+                description:
+                    document.getElementById(
+                        "description"
+                    ).value.trim(),
+
+                category:
+                    document.getElementById(
+                        "category"
+                    ).value,
+
+                location:
+                    document.getElementById(
+                        "location"
+                    ).value.trim(),
+
+                photo_url: photoUrl,
+
+                updated_at:
+                    new Date().toISOString()
+
+            };
+
+
+            let result;
+
+
+            // ------------------------------------------
+            // UPDATE
+            // ------------------------------------------
+
+            if (memoryId) {
+
+                result =
+                    await window.supabaseClient
+                        .from("memories")
+                        .update(memoryData)
+                        .eq("id", memoryId);
+
+            }
+
+
+            // ------------------------------------------
+            // INSERT
+            // ------------------------------------------
+
+            else {
+
+                result =
+                    await window.supabaseClient
+                        .from("memories")
+                        .insert([
+                            memoryData
+                        ]);
+
+            }
+
+
+            // ------------------------------------------
+            // DATABASE ERROR
+            // ------------------------------------------
+
+            if (result.error) {
+
+                // Clean up newly uploaded photo
+                if (uploadedPhotoPath) {
+
+                    await window.supabaseClient
+                        .storage
+                        .from("memory-photos")
+                        .remove([
+                            uploadedPhotoPath
+                        ]);
+
+                }
+
+
+                throw result.error;
+
+            }
+
+
+            formMessage.textContent =
+                "Memory saved ❤️";
+
+
+            setTimeout(() => {
+
+                closeMemoryForm();
+
+                loadMemories();
+
+            }, 700);
+
+
+        } catch (error) {
+
+            console.error(
+                "Save memory error:",
+                error
+            );
+
+
+            formMessage.textContent =
+                "Error: " +
+                error.message;
+
+        }
 
     }
 );
 
 
-// --------------------------------------------------
-// EDIT MEMORY
-// --------------------------------------------------
+// ======================================================
+// EDIT
+// ======================================================
 
 function editMemory(memory) {
 
@@ -391,15 +818,15 @@ function editMemory(memory) {
 }
 
 
-// --------------------------------------------------
+// ======================================================
 // DELETE MEMORY
-// --------------------------------------------------
+// ======================================================
 
-async function deleteMemory(id) {
+async function deleteMemory(memory) {
 
     const confirmed =
         confirm(
-            "Are you sure you want to delete this memory?"
+            `Delete "${memory.title}"?`
         );
 
 
@@ -412,7 +839,7 @@ async function deleteMemory(id) {
         await window.supabaseClient
             .from("memories")
             .delete()
-            .eq("id", id);
+            .eq("id", memory.id);
 
 
     if (error) {
@@ -422,19 +849,27 @@ async function deleteMemory(id) {
             error.message
         );
 
-        console.error(error);
-
         return;
     }
 
 
+    if (memory.photo_url) {
+
+        await deletePhotoFromStorage(
+            memory.photo_url
+        );
+
+    }
+
+
     loadMemories();
+
 }
 
 
-// --------------------------------------------------
+// ======================================================
 // SORT
-// --------------------------------------------------
+// ======================================================
 
 sortOrder.addEventListener(
     "change",
@@ -442,9 +877,9 @@ sortOrder.addEventListener(
 );
 
 
-// --------------------------------------------------
+// ======================================================
 // LOGOUT
-// --------------------------------------------------
+// ======================================================
 
 logoutButton.addEventListener(
     "click",
@@ -452,20 +887,24 @@ logoutButton.addEventListener(
 
         await window.supabaseClient.auth.signOut();
 
-        window.location.href = "login.html";
+        window.location.href =
+            "login.html";
 
     }
 );
 
 
-// --------------------------------------------------
+// ======================================================
 // HELPERS
-// --------------------------------------------------
+// ======================================================
 
 function formatDate(dateString) {
 
     const date =
-        new Date(dateString + "T00:00:00");
+        new Date(
+            dateString + "T00:00:00"
+        );
+
 
     return date.toLocaleDateString(
         "en-IN",
@@ -499,7 +938,34 @@ function getCategoryIcon(category) {
 
     };
 
+
     return icons[category] || "❤️";
+
+}
+
+
+function formatCategory(category) {
+
+    const names = {
+
+        memory: "Memory",
+
+        milestone: "Milestone",
+
+        date: "Date",
+
+        travel: "Travel",
+
+        celebration: "Celebration",
+
+        funny: "Funny",
+
+        family: "Family"
+
+    };
+
+
+    return names[category] || "Memory";
 
 }
 
@@ -509,15 +975,28 @@ function escapeHTML(value) {
     const div =
         document.createElement("div");
 
-    div.textContent = value || "";
+    div.textContent =
+        value || "";
 
     return div.innerHTML;
 
 }
 
 
-// --------------------------------------------------
+function escapeAttribute(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+}
+
+
+// ======================================================
 // START
-// --------------------------------------------------
+// ======================================================
 
 checkAuthentication();
