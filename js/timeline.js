@@ -1590,9 +1590,11 @@ function showLoading() {
 
         <div class="loading-state">
 
-            <div class="loading-heart">
+            <div class="loading-heart" aria-hidden="true">
                 ♡
             </div>
+
+            <div class="loading-spinner" aria-hidden="true"></div>
 
             <p>
                 Gathering our memories...
