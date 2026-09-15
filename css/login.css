@@ -1,1 +1,1348 @@
+/* =========================================================
+   OUR STORY — PRIVATE CHAPTER LOGIN
+   Ultra Premium 3D Editorial Style
+   ========================================================= */
 
+
+/* =========================================================
+   ROOT
+   ========================================================= */
+
+:root {
+
+    --burgundy-deep: #10070c;
+    --burgundy: #1a0b12;
+    --burgundy-soft: #241019;
+
+    --ivory: #f4eee7;
+    --cream: #e7ddd3;
+
+    --gold: #c9a66b;
+    --gold-light: #e1c58d;
+
+    --muted: rgba(231, 221, 211, 0.55);
+    --muted-soft: rgba(231, 221, 211, 0.34);
+
+    --border: rgba(201, 166, 107, 0.20);
+
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+html {
+    min-height: 100%;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            rgba(101, 35, 57, 0.26),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(201, 166, 107, 0.055),
+            transparent 30%
+        ),
+        var(--burgundy-deep);
+
+    color: var(--cream);
+
+    font-family:
+        "DM Sans",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.login-container {
+
+    position: relative;
+
+    min-height: 100vh;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 70px 30px;
+
+    overflow: hidden;
+
+}
+
+
+/* =========================================================
+   AMBIENT BACKGROUND
+   ========================================================= */
+
+.ambient-glow {
+
+    position: absolute;
+
+    pointer-events: none;
+
+    border-radius: 50%;
+
+    filter: blur(80px);
+
+    opacity: 0.45;
+
+}
+
+
+.ambient-glow-one {
+
+    width: 420px;
+    height: 420px;
+
+    top: -180px;
+    left: -120px;
+
+    background:
+        rgba(106, 39, 61, 0.28);
+
+}
+
+
+.ambient-glow-two {
+
+    width: 500px;
+    height: 500px;
+
+    right: -180px;
+    bottom: -220px;
+
+    background:
+        rgba(86, 28, 49, 0.22);
+
+}
+
+
+/* Subtle cinematic grain */
+
+.ambient-noise {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.035;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+
+}
+
+
+/* =========================================================
+   3D STAGE
+   ========================================================= */
+
+.login-stage {
+
+    position: relative;
+
+    width: min(1080px, 100%);
+
+    min-height: 620px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    perspective: 1800px;
+
+}
+
+
+/* =========================================================
+   STORY CARD — REAR CARD
+   ========================================================= */
+
+.story-card {
+
+    position: absolute;
+
+    left: 20px;
+
+    width: 500px;
+
+    min-height: 470px;
+
+    padding: 55px;
+
+    border: 1px solid
+        rgba(201, 166, 107, 0.16);
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(47, 20, 31, 0.96),
+            rgba(20, 9, 14, 0.98)
+        );
+
+    box-shadow:
+
+        0 50px 100px
+            rgba(0, 0, 0, 0.55),
+
+        0 20px 40px
+            rgba(0, 0, 0, 0.28),
+
+        inset 0 1px 0
+            rgba(255, 255, 255, 0.035);
+
+    transform:
+        translate3d(0, 0, -40px)
+        rotateY(7deg)
+        rotateZ(-1.2deg);
+
+    transform-style: preserve-3d;
+
+    z-index: 1;
+
+}
+
+
+/* Gold edge */
+
+.story-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 12px;
+
+    border: 1px solid
+        rgba(201, 166, 107, 0.08);
+
+    border-radius: 5px;
+
+    pointer-events: none;
+
+}
+
+
+/* Story content */
+
+.story-card-inner {
+
+    position: relative;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+
+/* Eyebrow */
+
+.story-eyebrow {
+
+    margin: 0 0 18px;
+
+    color: var(--gold);
+
+    font-size: 0.62rem;
+
+    font-weight: 400;
+
+    letter-spacing: 0.28em;
+
+}
+
+
+/* Main story heading */
+
+.story-card h1 {
+
+    margin: 0;
+
+    color: var(--ivory);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: clamp(
+        3rem,
+        5vw,
+        4.3rem
+    );
+
+    font-weight: 400;
+
+    line-height: 0.94;
+
+    letter-spacing: -0.025em;
+
+}
+
+
+/* Heart */
+
+.story-heart {
+
+    margin: 34px 0;
+
+    color: var(--gold-light);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 2.2rem;
+
+    line-height: 1;
+
+}
+
+
+/* Dates */
+
+.story-dates {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+
+.story-date {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+
+.story-date span {
+
+    color:
+        rgba(231, 221, 211, 0.42);
+
+    font-size: 0.58rem;
+
+    letter-spacing: 0.17em;
+
+}
+
+
+.story-date strong {
+
+    color:
+        rgba(231, 221, 211, 0.78);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 1.08rem;
+
+    font-weight: 400;
+
+    letter-spacing: 0.05em;
+
+}
+
+
+/* Date divider */
+
+.story-divider {
+
+    width: 34px;
+
+    height: 1px;
+
+    margin: 2px 0;
+
+    background:
+        rgba(201, 166, 107, 0.30);
+
+}
+
+
+/* Story footer */
+
+.story-footer {
+
+    margin: 38px 0 0;
+
+    color:
+        rgba(231, 221, 211, 0.30);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 0.95rem;
+
+    font-style: italic;
+
+    letter-spacing: 0.02em;
+
+}
+
+
+/* =========================================================
+   LOGIN CARD — FRONT CARD
+   ========================================================= */
+
+.login-card {
+
+    position: relative;
+
+    width: 430px;
+
+    min-height: 540px;
+
+    margin-left: 410px;
+
+    padding: 1px;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(225, 197, 141, 0.40),
+            rgba(201, 166, 107, 0.08) 30%,
+            rgba(255, 255, 255, 0.04) 70%,
+            rgba(201, 166, 107, 0.20)
+        );
+
+    box-shadow:
+
+        0 55px 110px
+            rgba(0, 0, 0, 0.62),
+
+        0 25px 55px
+            rgba(0, 0, 0, 0.35),
+
+        0 0 80px
+            rgba(100, 32, 54, 0.18);
+
+    transform:
+        translate3d(0, 0, 20px)
+        rotateY(-3deg)
+        rotateZ(0.6deg);
+
+    transform-style: preserve-3d;
+
+    z-index: 5;
+
+}
+
+
+/* 3D extrusion */
+
+.login-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 5px;
+
+    border-radius: 6px;
+
+    background:
+        rgba(255, 255, 255, 0.018);
+
+    transform:
+        translateZ(-8px);
+
+    box-shadow:
+        7px 10px 0
+            rgba(0, 0, 0, 0.18);
+
+    pointer-events: none;
+
+}
+
+
+/* Main card surface */
+
+.login-card-inner {
+
+    position: relative;
+
+    min-height: 538px;
+
+    padding: 55px 52px 42px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 70% 12%,
+            rgba(201, 166, 107, 0.07),
+            transparent 28%
+        ),
+
+        linear-gradient(
+            145deg,
+            rgba(39, 17, 26, 0.98),
+            rgba(20, 9, 14, 0.99)
+        );
+
+}
+
+
+/* Inner top highlight */
+
+.login-card-inner::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 12%;
+
+    width: 76%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(225, 197, 141, 0.40),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   CARD GLOW
+   ========================================================= */
+
+.login-card-glow {
+
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    top: -100px;
+    right: -80px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(201, 166, 107, 0.12);
+
+    filter: blur(60px);
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================================
+   LOGIN HEART
+   ========================================================= */
+
+.heart {
+
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 24px;
+
+    border: 1px solid
+        rgba(201, 166, 107, 0.26);
+
+    border-radius: 50%;
+
+    color: var(--gold-light);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 1.65rem;
+
+    background:
+        rgba(201, 166, 107, 0.035);
+
+    box-shadow:
+
+        0 0 0 6px
+            rgba(201, 166, 107, 0.018),
+
+        0 8px 25px
+            rgba(0, 0, 0, 0.22);
+
+}
+
+
+/* =========================================================
+   LOGIN TEXT
+   ========================================================= */
+
+.login-eyebrow {
+
+    margin: 0 0 7px;
+
+    color: var(--gold);
+
+    text-align: center;
+
+    font-size: 0.58rem;
+
+    font-weight: 400;
+
+    letter-spacing: 0.25em;
+
+}
+
+
+.login-card h2 {
+
+    margin: 0;
+
+    color: var(--ivory);
+
+    text-align: center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 3.25rem;
+
+    font-weight: 400;
+
+    line-height: 1;
+
+    letter-spacing: -0.02em;
+
+}
+
+
+.login-subtitle {
+
+    margin: 14px 0 35px;
+
+    color: var(--muted);
+
+    text-align: center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 1.05rem;
+
+    font-style: italic;
+
+    font-weight: 400;
+
+    line-height: 1.45;
+
+}
+
+
+/* =========================================================
+   INPUT GROUP
+   ========================================================= */
+
+.input-group {
+
+    margin-bottom: 18px;
+
+}
+
+
+.input-group label {
+
+    display: block;
+
+    margin: 0 0 8px;
+
+    color:
+        rgba(231, 221, 211, 0.42);
+
+    font-size: 0.55rem;
+
+    font-weight: 400;
+
+    letter-spacing: 0.17em;
+
+}
+
+
+.input-group input {
+
+    width: 100%;
+
+    height: 52px;
+
+    padding: 0 16px;
+
+    border: 1px solid
+        rgba(201, 166, 107, 0.15);
+
+    border-radius: 4px;
+
+    outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    color: var(--ivory);
+
+    font-family:
+        "DM Sans",
+        sans-serif;
+
+    font-size: 0.78rem;
+
+    font-weight: 300;
+
+    letter-spacing: 0.01em;
+
+    transition:
+
+        border-color 0.3s ease,
+
+        background 0.3s ease,
+
+        box-shadow 0.3s ease;
+
+}
+
+
+.input-group input::placeholder {
+
+    color:
+        rgba(231, 221, 211, 0.27);
+
+}
+
+
+.input-group input:hover {
+
+    border-color:
+        rgba(201, 166, 107, 0.25);
+
+}
+
+
+.input-group input:focus {
+
+    border-color:
+        rgba(201, 166, 107, 0.55);
+
+    background:
+        rgba(201, 166, 107, 0.035);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(201, 166, 107, 0.045);
+
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.login-button {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 54px;
+
+    margin-top: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    border: 1px solid
+        rgba(225, 197, 141, 0.45);
+
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(201, 166, 107, 0.16),
+            rgba(201, 166, 107, 0.045)
+        );
+
+    color: var(--gold-light);
+
+    font-family:
+        "DM Sans",
+        sans-serif;
+
+    font-size: 0.68rem;
+
+    font-weight: 400;
+
+    letter-spacing: 0.16em;
+
+    text-transform: uppercase;
+
+    transition:
+
+        transform 0.3s ease,
+
+        border-color 0.3s ease,
+
+        background 0.3s ease,
+
+        box-shadow 0.3s ease;
+
+}
+
+
+.login-button::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    transform:
+        translateX(-110%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.09),
+            transparent
+        );
+
+    transition:
+        transform 0.65s ease;
+
+}
+
+
+.login-button:hover {
+
+    border-color:
+        rgba(225, 197, 141, 0.75);
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(201, 166, 107, 0.23),
+            rgba(201, 166, 107, 0.07)
+        );
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.22);
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.login-button:hover::before {
+
+    transform:
+        translateX(110%);
+
+}
+
+
+.login-button:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+.button-arrow {
+
+    font-size: 1rem;
+
+    line-height: 1;
+
+    transition:
+        transform 0.3s ease;
+
+}
+
+
+.login-button:hover .button-arrow {
+
+    transform:
+        translateX(4px);
+
+}
+
+
+/* =========================================================
+   LOGIN MESSAGE
+   ========================================================= */
+
+.login-message {
+
+    min-height: 18px;
+
+    margin: 13px 0 0;
+
+    color:
+        rgba(231, 221, 211, 0.52);
+
+    text-align: center;
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 0.92rem;
+
+    font-style: italic;
+
+    line-height: 1.4;
+
+}
+
+
+/* =========================================================
+   PRIVATE ARCHIVE LABEL
+   ========================================================= */
+
+.private-label {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 30px;
+
+    color:
+        rgba(231, 221, 211, 0.23);
+
+    font-size: 0.48rem;
+
+    letter-spacing: 0.16em;
+
+    white-space: nowrap;
+
+}
+
+
+.private-line {
+
+    width: 28px;
+
+    height: 1px;
+
+    background:
+        rgba(201, 166, 107, 0.15);
+
+}
+
+
+/* =========================================================
+   PAGE SIGNATURE
+   ========================================================= */
+
+.page-signature {
+
+    position: absolute;
+
+    bottom: 24px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    margin: 0;
+
+    color:
+        rgba(231, 221, 211, 0.20);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 0.85rem;
+
+    font-style: italic;
+
+    letter-spacing: 0.03em;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.login-button:focus-visible,
+.input-group input:focus-visible {
+
+    outline: 1px solid
+        rgba(225, 197, 141, 0.75);
+
+    outline-offset: 4px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .login-stage {
+
+        min-height: 590px;
+
+    }
+
+
+    .story-card {
+
+        width: 430px;
+
+        left: 0;
+
+        padding: 45px;
+
+        transform:
+            translate3d(0, 0, -35px)
+            rotateY(5deg)
+            rotateZ(-1deg);
+
+    }
+
+
+    .login-card {
+
+        width: 400px;
+
+        margin-left: 330px;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 720px) {
+
+    .login-container {
+
+        min-height: 100svh;
+
+        padding:
+            45px 18px 75px;
+
+        align-items: flex-start;
+
+        overflow-y: auto;
+
+    }
+
+
+    .login-stage {
+
+        width: 100%;
+
+        min-height: auto;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        gap: 20px;
+
+        perspective: none;
+
+    }
+
+
+    /* Rear card becomes upper story card */
+
+    .story-card {
+
+        position: relative;
+
+        left: auto;
+
+        width: min(100%, 440px);
+
+        min-height: auto;
+
+        padding: 38px 30px 34px;
+
+        transform: none;
+
+        z-index: 1;
+
+    }
+
+
+    .story-card-inner {
+
+        display: block;
+
+    }
+
+
+    .story-card h1 {
+
+        font-size:
+            clamp(
+                2.7rem,
+                13vw,
+                3.5rem
+            );
+
+    }
+
+
+    .story-heart {
+
+        margin: 25px 0;
+
+    }
+
+
+    .story-footer {
+
+        margin-top: 27px;
+
+    }
+
+
+    /* Login card */
+
+    .login-card {
+
+        width: min(100%, 440px);
+
+        min-height: auto;
+
+        margin-left: 0;
+
+        transform: none;
+
+        z-index: 2;
+
+    }
+
+
+    .login-card-inner {
+
+        min-height: auto;
+
+        padding:
+            42px 27px 35px;
+
+    }
+
+
+    .login-card h2 {
+
+        font-size: 3rem;
+
+    }
+
+
+    .login-subtitle {
+
+        margin-bottom: 30px;
+
+    }
+
+
+    .page-signature {
+
+        bottom: 20px;
+
+        font-size: 0.78rem;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .login-container {
+
+        padding:
+            30px 13px 70px;
+
+    }
+
+
+    .story-card {
+
+        padding:
+            32px 23px 29px;
+
+    }
+
+
+    .story-card h1 {
+
+        font-size: 2.65rem;
+
+    }
+
+
+    .login-card-inner {
+
+        padding:
+            37px 21px 30px;
+
+    }
+
+
+    .login-card h2 {
+
+        font-size: 2.75rem;
+
+    }
+
+
+    .private-label {
+
+        font-size: 0.43rem;
+
+        letter-spacing: 0.12em;
+
+    }
+
+
+    .private-line {
+
+        width: 20px;
+
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+
+        scroll-behavior: auto !important;
+
+    }
+
+}
