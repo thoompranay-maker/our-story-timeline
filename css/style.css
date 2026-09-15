@@ -292,6 +292,204 @@ em {
     letter-spacing: 0.22em;
 }
 
+/* =========================================================
+   STAGE 9 — OUR JOURNEY MILESTONES
+   ========================================================= */
+
+.journey-milestones {
+    position: relative;
+    width: 100%;
+    padding: 75px 20px 85px;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(201, 166, 107, 0.055),
+            transparent 55%
+        );
+}
+
+.journey-milestones-inner {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.journey-eyebrow {
+    margin: 0 0 10px;
+
+    color: var(--gold);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 400;
+
+    letter-spacing: 0.22em;
+}
+
+.journey-milestones h2 {
+    margin: 0;
+
+    color: var(--cream);
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.journey-intro {
+    max-width: 500px;
+    margin: 14px auto 45px;
+
+    color: rgba(216, 203, 192, 0.58);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+
+    line-height: 1.6;
+}
+
+.milestone-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.milestone-card {
+    position: relative;
+
+    padding: 38px 28px 34px;
+
+    border: 1px solid rgba(201, 166, 107, 0.14);
+    border-radius: 6px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.012)
+        );
+
+    box-shadow:
+        0 20px 55px rgba(0, 0, 0, 0.16);
+
+    transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.milestone-card:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(201, 166, 107, 0.3);
+
+    box-shadow:
+        0 25px 65px rgba(0, 0, 0, 0.22);
+}
+
+.milestone-primary {
+    border-color: rgba(201, 166, 107, 0.24);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(201, 166, 107, 0.055),
+            rgba(255, 255, 255, 0.012)
+        );
+}
+
+.milestone-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+
+    border: 1px solid rgba(201, 166, 107, 0.25);
+    border-radius: 50%;
+
+    color: var(--gold-light);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.55rem;
+
+    background: rgba(201, 166, 107, 0.035);
+
+    box-shadow:
+        0 0 0 5px rgba(201, 166, 107, 0.018);
+}
+
+.milestone-label {
+    margin: 0 0 7px;
+
+    color: var(--gold);
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.58rem;
+    font-weight: 400;
+
+    letter-spacing: 0.2em;
+}
+
+.milestone-card h3 {
+    margin: 0;
+
+    color: var(--cream);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+
+    letter-spacing: 0.02em;
+}
+
+.milestone-counter {
+    margin: 22px 0 5px;
+
+    color: var(--gold-light);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.65rem;
+    font-weight: 500;
+
+    line-height: 1;
+}
+
+.milestone-counter-label {
+    margin-left: 4px;
+
+    color: rgba(216, 203, 192, 0.55);
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.6rem;
+    font-weight: 300;
+
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.milestone-note {
+    max-width: 230px;
+    margin: 14px auto 0;
+
+    color: rgba(216, 203, 192, 0.5);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 400;
+
+    line-height: 1.5;
+}
+
 
 /* =========================================================
    TIMELINE SECTION
@@ -1329,6 +1527,29 @@ em {
         margin: 30px auto;
         font-size: 1.15rem;
     }
+
+   .journey-milestones {
+    padding: 58px 16px 68px;
+}
+
+.journey-intro {
+    margin-bottom: 32px;
+    font-size: 1rem;
+}
+
+.milestone-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 420px;
+}
+
+.milestone-card {
+    padding: 32px 22px 30px;
+}
+
+.milestone-counter {
+    font-size: 2.4rem;
+}
 
     .timeline-section {
         padding: 90px 16px 70px;
