@@ -1889,3 +1889,20 @@ select:focus-visible {
     outline: 1px solid rgba(201, 166, 107, 0.85);
     outline-offset: 5px;
 }
+
+/* =========================================
+   STAGE 8D — REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+}
