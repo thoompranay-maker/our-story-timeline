@@ -882,6 +882,8 @@ body {
 
     inset: 0;
 
+   pointer-events: none;
+
     transform:
         translateX(-110%);
 
@@ -933,7 +935,8 @@ body {
 .login-button:active {
 
     transform:
-        translateY(0);
+        translateY(0)
+   pointer-events: none;;
 
 }
 
