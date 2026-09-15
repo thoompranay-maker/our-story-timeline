@@ -759,14 +759,24 @@ em {
 .memory-photo-wrapper {
     position: relative;
     width: 100%;
+
+    /*
+       Keep every timeline card visually consistent,
+       regardless of the original photograph's
+       dimensions.
+    */
     aspect-ratio: 16 / 10;
+
     overflow: hidden;
+
     background:
         linear-gradient(
             135deg,
             rgba(110, 38, 62, 0.55),
             rgba(45, 18, 29, 0.8)
         );
+
+    isolation: isolate;
 }
 
 .memory-photo-wrapper::after {
@@ -785,9 +795,40 @@ em {
 .memory-photo {
     width: 100%;
     height: 100%;
+
     display: block;
+
+    /*
+       Preserve the complete visual quality of the
+       image area while keeping cards aligned.
+    */
     object-fit: cover;
-    transition: transform 0.7s ease;
+
+    object-position: center;
+
+    /*
+       Helps the browser render large photographs
+       more efficiently.
+    */
+    image-rendering: auto;
+
+    transition:
+        transform 0.7s ease,
+        opacity 0.35s ease;
+
+    /*
+       Prevent accidental selection/dragging.
+    */
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.memory-photo[data-src] {
+    opacity: 0;
+}
+
+.memory-photo:not([data-src]) {
+    opacity: 1;
 }
 
 .memory-card:hover .memory-photo {
@@ -1268,6 +1309,14 @@ em {
 
     .memory-description {
         font-size: 0.78rem;
+    }
+
+       .memory-photo-wrapper {
+        aspect-ratio: 4 / 3;
+    }
+
+    .memory-photo {
+        object-position: center center;
     }
 
     .upcoming-section {
