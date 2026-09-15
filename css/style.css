@@ -507,6 +507,24 @@ em {
     text-transform: uppercase;
 }
 
+/* =========================================================
+   STAGE 9 — AND COUNTING
+   ========================================================= */
+
+.milestone-counting {
+    margin: 9px 0 0;
+
+    color: rgba(216, 203, 192, 0.42);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    font-weight: 400;
+
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+}
+
 
 /* =========================================================
    TIMELINE SECTION
@@ -1566,6 +1584,10 @@ em {
 
 .milestone-counter {
     font-size: 2.4rem;
+}
+
+   .milestone-counting {
+    font-size: 0.86rem;
 }
 
     .timeline-section {
