@@ -687,9 +687,23 @@ em {
     padding: 0 55px 70px 0;
 }
 
-.timeline-item:nth-child(even) {
+
+/* ---------------------------------------------------------
+   CONTINUOUS DIAGONAL FLOW
+   Year chapters do not affect the sequence.
+   --------------------------------------------------------- */
+
+.timeline-item.timeline-left {
+    margin-left: 0;
+    padding-right: 55px;
+    padding-left: 0;
+}
+
+
+.timeline-item.timeline-right {
     margin-left: 50%;
-    padding: 0 0 70px 55px;
+    padding-left: 55px;
+    padding-right: 0;
 }
 
 .timeline-dot {
@@ -707,7 +721,8 @@ em {
     z-index: 4;
 }
 
-.timeline-item:nth-child(even) .timeline-dot {
+
+.timeline-item.timeline-right .timeline-dot {
     right: auto;
     left: -7px;
 }
@@ -1226,21 +1241,22 @@ em {
         display: none;
     }
 
-    .timeline-item,
-    .timeline-item:nth-child(even) {
-        width: 100%;
-        margin-left: 0;
-        padding: 0 0 45px 38px;
-    }
+.timeline-item,
+.timeline-item.timeline-left,
+.timeline-item.timeline-right {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 0 45px 38px;
+}
 
-    .timeline-dot,
-    .timeline-item:nth-child(even) .timeline-dot {
-        top: 23px;
-        left: 7px;
-        right: auto;
-        width: 13px;
-        height: 13px;
-    }
+.timeline-dot,
+.timeline-item.timeline-right .timeline-dot {
+    top: 23px;
+    left: 7px;
+    right: auto;
+    width: 13px;
+    height: 13px;
+}
 
     .memory-content {
         padding: 20px;
