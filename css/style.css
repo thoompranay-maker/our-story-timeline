@@ -1358,6 +1358,51 @@ em {
     .search-icon {
         width: 42px;
     }
+
+   /* =========================================
+   STAGE 8D — MOBILE CARD POLISH
+   ========================================= */
+
+.timeline-item,
+.timeline-item.timeline-left,
+.timeline-item.timeline-right {
+    padding-left: 34px;
+    padding-right: 0;
+    padding-bottom: 42px;
+}
+
+.memory-card {
+    width: 100%;
+    max-width: 100%;
+}
+
+.memory-content {
+    padding: 22px 20px 24px;
+}
+
+.memory-title {
+    font-size: 1.25rem;
+    line-height: 1.25;
+}
+
+.memory-description {
+    font-size: 0.78rem;
+    line-height: 1.75;
+}
+
+.memory-meta {
+    font-size: 0.62rem;
+}
+
+.memory-location {
+    font-size: 0.64rem;
+}
+
+.timeline-dot,
+.timeline-item.timeline-right .timeline-dot {
+    left: 6px;
+    right: auto;
+}
    
 }
 
