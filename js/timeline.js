@@ -1636,6 +1636,12 @@ function setupMilestoneCounters() {
     const marriageDate =
         new Date(2025, 7, 17);
 
+   const engagementWeekday =
+    document.getElementById("engagementWeekday");
+
+const marriageWeekday =
+    document.getElementById("marriageWeekday");
+
 
     /* -----------------------------------------
        CALCULATE DAYS
@@ -1694,5 +1700,34 @@ function setupMilestoneCounters() {
             calculateDays(marriageDate);
 
     }
+
+   /* -----------------------------------------
+   UPDATE WEEKDAYS
+   ----------------------------------------- */
+
+const weekdayFormatter =
+    new Intl.DateTimeFormat("en-IN", {
+        weekday: "long"
+    });
+
+
+if (engagementWeekday) {
+
+    engagementWeekday.textContent =
+        weekdayFormatter.format(
+            engagementDate
+        );
+
+}
+
+
+if (marriageWeekday) {
+
+    marriageWeekday.textContent =
+        weekdayFormatter.format(
+            marriageDate
+        );
+
+}
 
 }
