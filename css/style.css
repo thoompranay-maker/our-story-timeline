@@ -516,16 +516,28 @@ em {
    ========================================================= */
 
 .search-result-info {
-    margin: -8px auto 30px;
-    color: var(--muted);
-    font-size: 0.64rem;
-    letter-spacing: 0.08em;
+    margin: -5px auto 32px;
+
+    color: rgba(216, 203, 192, 0.52);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 400;
+
+    letter-spacing: 0.02em;
+    line-height: 1.5;
     text-align: center;
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
 }
 
 .search-result-info strong {
     color: var(--gold-light);
     font-weight: 400;
+    font-style: normal;
 }
 
 
@@ -1468,6 +1480,12 @@ em {
     .search-icon {
         width: 42px;
     }
+
+   .search-result-info {
+    margin: -3px auto 25px;
+    padding: 0 18px;
+    font-size: 0.92rem;
+}
 
    /* =========================================
    STAGE 8D — MOBILE CARD POLISH
