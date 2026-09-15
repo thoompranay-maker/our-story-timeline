@@ -185,7 +185,9 @@ function setupSorting() {
             currentSort =
                 sortOrder.value;
 
-            loadMemories();
+            sortMemoriesLocally();
+
+            renderTimeline();
 
         }
     );
