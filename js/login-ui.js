@@ -13,18 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginCard =
         document.querySelector(".login-card");
 
-    const form =
-        document.getElementById("loginForm");
-
-    const loginButton =
-        document.querySelector(".login-button");
-
-    const buttonText =
-        document.querySelector(".button-text");
-
-    const loginMessage =
-        document.getElementById("loginMessage");
-
 
     /* =====================================================
        PAGE ENTRANCE
