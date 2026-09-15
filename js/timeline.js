@@ -453,6 +453,22 @@ updateSearchResultInfo(
                     index
                 );
 
+           /* -----------------------------------------
+   CONTINUOUS LEFT / RIGHT TIMELINE
+   The year chapters do NOT affect the
+   alternating card sequence.
+   ----------------------------------------- */
+
+if (index % 2 === 0) {
+
+    item.classList.add("timeline-left");
+
+} else {
+
+    item.classList.add("timeline-right");
+
+}
+
             timelineContainer.appendChild(
                 item
             );
