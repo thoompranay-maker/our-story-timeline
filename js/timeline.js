@@ -252,6 +252,73 @@ function setupSearch() {
 }
 
 /* =========================================================
+   PHOTO VIEWER SETUP
+   ========================================================= */
+
+function setupPhotoViewer() {
+
+    if (!photoViewer) {
+        return;
+    }
+
+
+    /* -----------------------------------------
+       CLOSE BUTTON
+       ----------------------------------------- */
+
+    if (photoViewerClose) {
+
+        photoViewerClose.addEventListener(
+            "click",
+            closePhotoViewer
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       CLICK OUTSIDE PHOTO
+       ----------------------------------------- */
+
+    photoViewer.addEventListener(
+        "click",
+        (event) => {
+
+            if (
+                event.target === photoViewer
+            ) {
+
+                closePhotoViewer();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       ESCAPE KEY
+       ----------------------------------------- */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Escape" &&
+                !photoViewer.classList.contains("hidden")
+            ) {
+
+                closePhotoViewer();
+
+            }
+
+        }
+    );
+
+}
+
+/* =========================================================
    FILTER MEMORIES
    ========================================================= */
 
