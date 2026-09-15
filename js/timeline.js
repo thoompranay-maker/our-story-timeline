@@ -51,6 +51,22 @@ const upcomingSection =
 const upcomingMemories =
     document.getElementById("upcomingMemories");
 
+/* =========================================================
+   PHOTO VIEWER ELEMENTS
+   ========================================================= */
+
+const photoViewer =
+    document.getElementById("photoViewer");
+
+const photoViewerImage =
+    document.getElementById("photoViewerImage");
+
+const photoViewerClose =
+    document.getElementById("photoViewerClose");
+
+const photoViewerCaption =
+    document.getElementById("photoViewerCaption");
+
 
 /* =========================================================
    INITIAL LOAD
