@@ -765,8 +765,171 @@ function createMemoryItem(
         </div>
     `;
 
+   /* -----------------------------------------
+   PHOTO VIEWER CLICK
+   ----------------------------------------- */
+
+const photo =
+    item.querySelector(".memory-photo");
+
+if (photo) {
+
+    photo.addEventListener(
+        "click",
+        () => {
+
+            openPhotoViewer(
+                memory.photo_url,
+                memory.title,
+                memory.event_date
+            );
+
+        }
+    );
+
+}
 
     return item;
+
+}
+
+/* =========================================================
+   OPEN PHOTO VIEWER
+   ========================================================= */
+
+function openPhotoViewer(
+    photoUrl,
+    title,
+    eventDate
+) {
+
+    if (
+        !photoViewer ||
+        !photoViewerImage
+    ) {
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       SET IMAGE
+       ----------------------------------------- */
+
+    photoViewerImage.src =
+        photoUrl || "";
+
+
+    /* -----------------------------------------
+       SET ALT TEXT
+       ----------------------------------------- */
+
+    photoViewerImage.alt =
+        title || "Memory photograph";
+
+
+    /* -----------------------------------------
+       SET CAPTION
+       ----------------------------------------- */
+
+    if (photoViewerCaption) {
+
+        const formattedDate =
+            eventDate
+                ? formatDate(
+                    parseDate(eventDate)
+                )
+                : "";
+
+
+        const safeTitle =
+            title
+                ? escapeHTML(title)
+                : "Our memory";
+
+
+        photoViewerCaption.innerHTML =
+            formattedDate
+                ? `
+                    ${safeTitle}
+                    <br>
+                    <small>${formattedDate}</small>
+                  `
+                : safeTitle;
+
+    }
+
+
+    /* -----------------------------------------
+       SHOW VIEWER
+       ----------------------------------------- */
+
+    photoViewer.classList.remove(
+        "hidden"
+    );
+
+
+    document.body.classList.add(
+        "photo-viewer-open"
+    );
+
+
+    /* -----------------------------------------
+       ACCESSIBILITY
+       ----------------------------------------- */
+
+    if (photoViewerClose) {
+
+        photoViewerClose.focus();
+
+    }
+
+}
+
+/* =========================================================
+   CLOSE PHOTO VIEWER
+   ========================================================= */
+
+function closePhotoViewer() {
+
+    if (!photoViewer) {
+        return;
+    }
+
+
+    photoViewer.classList.add(
+        "hidden"
+    );
+
+
+    document.body.classList.remove(
+        "photo-viewer-open"
+    );
+
+
+    /* -----------------------------------------
+       CLEAR IMAGE
+       ----------------------------------------- */
+
+    if (photoViewerImage) {
+
+        photoViewerImage.src = "";
+
+        photoViewerImage.alt = "";
+
+    }
+
+
+    /* -----------------------------------------
+       CLEAR CAPTION
+       ----------------------------------------- */
+
+    if (photoViewerCaption) {
+
+        photoViewerCaption.innerHTML = "";
+
+    }
 
 }
 
