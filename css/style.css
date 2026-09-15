@@ -1854,3 +1854,38 @@ body.photo-viewer-open {
     }
 
 }
+
+/* =========================================
+   STAGE 8D — ACCESSIBILITY / KEYBOARD FOCUS
+   ========================================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 1px solid rgba(201, 166, 107, 0.75);
+    outline-offset: 4px;
+}
+
+/* Search field */
+.timeline-search input:focus-visible {
+    outline: none;
+}
+
+/* Search clear button */
+.clear-search:focus-visible {
+    background: rgba(201, 166, 107, 0.08);
+    color: var(--gold-light);
+}
+
+/* Timeline controls */
+.timeline-controls button:focus-visible,
+.timeline-controls select:focus-visible {
+    outline: 1px solid rgba(201, 166, 107, 0.7);
+    outline-offset: 3px;
+}
+
+/* Photo viewer close button */
+.photo-viewer-close:focus-visible {
+    outline: 1px solid rgba(201, 166, 107, 0.85);
+    outline-offset: 5px;
+}
