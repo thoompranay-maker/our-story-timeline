@@ -1101,11 +1101,11 @@ em {
 
     font-family: "Cormorant Garamond", serif;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 300;
     font-style: italic;
 
-    letter-spacing: 0.02em;
-    line-height: 1.5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 
