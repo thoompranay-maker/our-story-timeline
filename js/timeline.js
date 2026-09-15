@@ -82,6 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupSearch();
 
+   setupPhotoViewer();
+
 });
 
 
