@@ -111,13 +111,15 @@ async function loadMemories() {
             throw error;
         }
 
-        allMemories = data || [];
+      allMemories = data || [];
 
-        renderTimeline();
+      sortMemoriesLocally();
 
-        renderOnThisDay();
+      renderTimeline();
 
-        renderUpcomingMemories();
+      renderOnThisDay();
+
+      renderUpcomingMemories();
 
     } catch (error) {
 
