@@ -195,6 +195,35 @@ function setupSorting() {
 }
 
 /* =========================================================
+   LOCAL MEMORY SORTING
+   ========================================================= */
+
+function sortMemoriesLocally() {
+
+    allMemories.sort(
+        (a, b) => {
+
+            const dateA =
+                parseDate(a.event_date);
+
+            const dateB =
+                parseDate(b.event_date);
+
+
+            if (currentSort === "asc") {
+
+                return dateA - dateB;
+
+            }
+
+            return dateB - dateA;
+
+        }
+    );
+
+}
+
+/* =========================================================
    SEARCH SETUP
    ========================================================= */
 
