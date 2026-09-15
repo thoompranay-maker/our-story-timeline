@@ -1406,6 +1406,34 @@ em {
    
 }
 
+@media (max-width: 400px) {
+
+    .timeline-item,
+    .timeline-item.timeline-left,
+    .timeline-item.timeline-right {
+        padding-left: 30px;
+        padding-bottom: 36px;
+    }
+
+    .memory-content {
+        padding: 19px 17px 21px;
+    }
+
+    .memory-title {
+        font-size: 1.15rem;
+    }
+
+    .memory-description {
+        font-size: 0.75rem;
+        line-height: 1.7;
+    }
+
+    .timeline-dot,
+    .timeline-item.timeline-right .timeline-dot {
+        left: 4px;
+    }
+}
+
 
 /* =========================================================
    REDUCED MOTION
