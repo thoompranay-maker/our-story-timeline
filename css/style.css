@@ -625,6 +625,14 @@ em {
     transform: translateX(-50%);
 }
 
+.timeline-left .memory-card {
+    margin-left: auto;
+}
+
+.timeline-right .memory-card {
+    margin-right: auto;
+}
+
 
 /* =========================================================
    YEAR CHAPTERS
@@ -695,14 +703,14 @@ em {
 
 .timeline-item.timeline-left {
     margin-left: 0;
-    padding-right: 55px;
+    padding-right: 58px;
     padding-left: 0;
 }
 
 
 .timeline-item.timeline-right {
     margin-left: 50%;
-    padding-left: 55px;
+    padding-left: 58px;
     padding-right: 0;
 }
 
@@ -743,6 +751,7 @@ em {
         transform 0.4s ease,
         border-color 0.4s ease,
         box-shadow 0.4s ease;
+        max-width: 560px;
 }
 
 .memory-card:hover {
@@ -888,6 +897,8 @@ em {
     font-size: 0.82rem;
     line-height: 1.75;
     white-space: pre-line;
+    max-width: 100%;
+    overflow-wrap: break-word;
 }
 
 .memory-location {
