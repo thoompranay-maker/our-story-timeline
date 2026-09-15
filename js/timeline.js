@@ -765,6 +765,11 @@ function createMemoryItem(
     const formattedDate =
         formatDate(eventDate);
 
+   const formattedWeekday =
+    new Intl.DateTimeFormat("en-IN", {
+        weekday: "long"
+    }).format(eventDate);
+
 
     const category =
         formatCategory(
