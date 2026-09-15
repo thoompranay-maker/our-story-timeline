@@ -901,27 +901,6 @@ body {
 }
 
 
-.login-button:hover {
-
-    border-color:
-        rgba(225, 197, 141, 0.75);
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(201, 166, 107, 0.23),
-            rgba(201, 166, 107, 0.07)
-        );
-
-    box-shadow:
-        0 10px 30px
-        rgba(0, 0, 0, 0.22);
-   
-    transform:
-        translateY(-2px);
-}
-
-
 .login-button:active {
 
     transform:
@@ -942,13 +921,6 @@ body {
 
 }
 
-
-.login-button:hover .button-arrow {
-
-    transform:
-        translateX(4px);
-
-}
 
 
 /* =========================================================
