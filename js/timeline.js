@@ -475,6 +475,125 @@ if (index % 2 === 0) {
 
         }
     );
+   
+   setupLazyImages();
+}
+
+/* =========================================================
+   SMART IMAGE LOADING
+   ========================================================= */
+
+function setupLazyImages() {
+
+    const images =
+        document.querySelectorAll(
+            ".lazy-memory-image[data-src]"
+        );
+
+
+    if (!images.length) {
+        return;
+    }
+
+
+    /* -----------------------------------------
+       FALLBACK
+       ----------------------------------------- */
+
+    if (
+        !("IntersectionObserver" in window)
+    ) {
+
+        images.forEach(
+            loadLazyImage
+        );
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       OBSERVER
+       ----------------------------------------- */
+
+    const observer =
+        new IntersectionObserver(
+            (entries) => {
+
+                entries.forEach(
+                    (entry) => {
+
+                        if (
+                            !entry.isIntersecting
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        const image =
+                            entry.target;
+
+
+                        loadLazyImage(
+                            image
+                        );
+
+
+                        observer.unobserve(
+                            image
+                        );
+
+                    }
+                );
+
+            },
+            {
+                root: null,
+
+                /*
+                   Start loading slightly before
+                   the image actually enters the screen.
+                */
+
+                rootMargin: "300px 0px",
+
+                threshold: 0.01
+            }
+        );
+
+
+    images.forEach(
+        image => observer.observe(image)
+    );
+
+}
+
+
+/* =========================================================
+   LOAD ONE IMAGE
+   ========================================================= */
+
+function loadLazyImage(image) {
+
+    const source =
+        image.dataset.src;
+
+
+    if (!source) {
+        return;
+    }
+
+
+    image.src =
+        source;
+
+
+    image.removeAttribute(
+        "data-src"
+    );
 
 }
 
@@ -667,12 +786,14 @@ function createMemoryItem(
                 }
 
                 <img
-                    class="memory-photo"
-                    src="${escapeAttribute(memory.photo_url)}"
-                    alt="${escapeAttribute(memory.title || "Memory")}"
-                    loading="lazy"
-                    onerror="this.style.display='none'"
-                >
+    class="memory-photo lazy-memory-image"
+    src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+    data-src="${escapeAttribute(memory.photo_url)}"
+    alt="${escapeAttribute(memory.title || "Memory")}"
+    loading="lazy"
+    decoding="async"
+    onerror="this.style.display='none'"
+>
 
             </div>
         `;
