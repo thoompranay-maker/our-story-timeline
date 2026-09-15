@@ -1067,6 +1067,46 @@ em {
     font-size: 0.78rem;
 }
 
+/* =========================================
+   STAGE 8D — EMPTY STATE POLISH
+   ========================================= */
+
+.empty-state-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 18px;
+
+    border: 1px solid rgba(201, 166, 107, 0.25);
+    border-radius: 50%;
+
+    color: var(--gold-light);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.7rem;
+
+    background: rgba(201, 166, 107, 0.035);
+
+    box-shadow:
+        0 0 0 6px rgba(201, 166, 107, 0.025),
+        0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.empty-state-hint {
+    margin-top: 18px;
+
+    color: rgba(216, 203, 192, 0.42);
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 300;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 
 /* =========================================================
    CLOSING
