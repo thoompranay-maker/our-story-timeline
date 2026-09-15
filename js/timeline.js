@@ -84,6 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
    setupPhotoViewer();
 
+   setupMilestoneCounters();
+
 });
 
 
@@ -1610,3 +1612,87 @@ function showLoading() {
 /* =========================================================
    END
    ========================================================= */
+
+/* =========================================================
+   OUR JOURNEY MILESTONE COUNTERS
+   ========================================================= */
+
+function setupMilestoneCounters() {
+
+    const engagementCounter =
+        document.getElementById("engagementDays");
+
+    const marriageCounter =
+        document.getElementById("marriageDays");
+
+
+    /* -----------------------------------------
+       MILESTONE DATES
+       ----------------------------------------- */
+
+    const engagementDate =
+        new Date(2025, 6, 27);
+
+    const marriageDate =
+        new Date(2025, 7, 17);
+
+
+    /* -----------------------------------------
+       CALCULATE DAYS
+       ----------------------------------------- */
+
+    const today =
+        new Date();
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    function calculateDays(startDate) {
+
+        startDate.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+        const difference =
+            today.getTime() -
+            startDate.getTime();
+
+        return Math.max(
+            0,
+            Math.floor(
+                difference /
+                (1000 * 60 * 60 * 24)
+            )
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       UPDATE COUNTERS
+       ----------------------------------------- */
+
+    if (engagementCounter) {
+
+        engagementCounter.textContent =
+            calculateDays(engagementDate);
+
+    }
+
+
+    if (marriageCounter) {
+
+        marriageCounter.textContent =
+            calculateDays(marriageDate);
+
+    }
+
+}
