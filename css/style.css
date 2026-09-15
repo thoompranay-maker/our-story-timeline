@@ -1095,16 +1095,17 @@ em {
 }
 
 .empty-state-hint {
-    margin-top: 18px;
+    margin-top: 16px;
 
-    color: rgba(216, 203, 192, 0.42);
+    color: rgba(216, 203, 192, 0.48);
 
-    font-family: "DM Sans", sans-serif;
-    font-size: 0.62rem;
-    font-weight: 300;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: italic;
 
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
 }
 
 
@@ -1453,6 +1454,11 @@ em {
 .timeline-item.timeline-right .timeline-dot {
     left: 6px;
     right: auto;
+}
+
+   .empty-state-hint {
+    font-size: 0.92rem;
+    padding: 0 15px;
 }
    
 }
