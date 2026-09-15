@@ -907,8 +907,14 @@ function createMemoryItem(
                 <div class="memory-topline">
 
                     <span class="memory-date">
-                        ${formattedDate}
-                    </span>
+                      <span class="memory-weekday">
+                       ${formattedWeekday}
+                      </span>
+
+                      <span class="memory-date-main">
+                       ${formattedDate}
+                      </span>
+                  </span>
 
                     <span class="memory-category">
                         ${category}
