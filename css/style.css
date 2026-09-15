@@ -490,6 +490,23 @@ em {
     line-height: 1.5;
 }
 
+/* =========================================================
+   STAGE 9 — MILESTONE WEEKDAY
+   ========================================================= */
+
+.milestone-weekday {
+    margin: 9px 0 2px;
+
+    color: rgba(216, 203, 192, 0.45);
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.56rem;
+    font-weight: 300;
+
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
 
 /* =========================================================
    TIMELINE SECTION
