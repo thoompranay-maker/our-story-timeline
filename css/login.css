@@ -904,8 +904,7 @@ body {
 .login-button:active {
 
     transform:
-        translateY(0)
-   pointer-events: none;;
+        translateY(0);
 
 }
 
@@ -1313,12 +1312,91 @@ body {
 }
 
 /* =========================================================
-   PHASE 2 — CINEMATIC MICRO-INTERACTIONS
+   PHASE 3 — CINEMATIC ATMOSPHERE
+   Clean consolidated animation system
    ========================================================= */
 
 
 /* =========================================================
-   PAGE ENTRANCE
+   BACKGROUND ATMOSPHERE
+   ========================================================= */
+
+.ambient-glow-one {
+
+    animation:
+        ambientDriftOne
+        16s
+        ease-in-out
+        infinite
+        alternate;
+
+}
+
+
+.ambient-glow-two {
+
+    animation:
+        ambientDriftTwo
+        19s
+        ease-in-out
+        infinite
+        alternate;
+
+}
+
+
+@keyframes ambientDriftOne {
+
+    from {
+
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+
+        opacity: 0.32;
+
+    }
+
+    to {
+
+        transform:
+            translate3d(45px, 28px, 0)
+            scale(1.08);
+
+        opacity: 0.48;
+
+    }
+
+}
+
+
+@keyframes ambientDriftTwo {
+
+    from {
+
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+
+        opacity: 0.28;
+
+    }
+
+    to {
+
+        transform:
+            translate3d(-38px, -30px, 0)
+            scale(1.09);
+
+        opacity: 0.44;
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIAL STATE
    ========================================================= */
 
 .story-card,
@@ -1330,254 +1408,16 @@ body {
 }
 
 
-.story-card {
+/* =========================================================
+   STORY CARD ENTRANCE
+   ========================================================= */
 
-    transform:
-        translate3d(-18px, 18px, -40px)
-        rotateY(7deg)
-        rotateZ(-1.2deg);
+.story-card {
 
     transition:
         opacity 0.9s ease,
-        transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-
-}
-
-
-.login-card {
-
-    transform:
-        translate3d(18px, -18px, 20px)
-        rotateY(-3deg)
-        rotateZ(0.6deg);
-
-    transition:
-        opacity 0.9s ease 0.12s,
-        transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
-
-}
-
-
-.page-signature {
-
-    transition:
-        opacity 1.2s ease 0.55s;
-
-}
-
-
-/* Ready state */
-
-.login-page-ready .story-card {
-
-    opacity: 1;
-
-    transform:
-        translate3d(0, 0, -40px)
-        rotateY(7deg)
-        rotateZ(-1.2deg);
-
-}
-
-
-.login-page-ready .login-card {
-
-    opacity: 1;
-
-    transform:
-        translate3d(0, 0, 20px)
-        rotateY(-3deg)
-        rotateZ(0.6deg);
-
-}
-
-
-.login-page-ready .page-signature {
-
-    opacity: 1;
-
-}
-
-
-/* =========================================================
-   STORY CARD — VERY SUBTLE FLOAT
-   ========================================================= */
-
-.login-page-ready .story-card {
-
-    animation:
-        storyCardFloat 8s ease-in-out infinite;
-
-}
-
-
-@keyframes storyCardFloat {
-
-    0%,
-    100% {
-
-        margin-top: 0;
-
-    }
-
-    50% {
-
-        margin-top: -4px;
-
-    }
-
-}
-
-
-/* =========================================================
-   LOGIN HEART — BREATHING GLOW
-   ========================================================= */
-
-.heart {
-
-    animation:
-        heartBreath 3.8s ease-in-out infinite;
-
-}
-
-
-@keyframes heartBreath {
-
-    0%,
-    100% {
-
-        box-shadow:
-
-            0 0 0 6px
-                rgba(201, 166, 107, 0.018),
-
-            0 8px 25px
-                rgba(0, 0, 0, 0.22);
-
-    }
-
-    50% {
-
-        box-shadow:
-
-            0 0 0 8px
-                rgba(201, 166, 107, 0.025),
-
-            0 0 24px
-                rgba(201, 166, 107, 0.10),
-
-            0 8px 25px
-                rgba(0, 0, 0, 0.22);
-
-    }
-
-}
-
-
-/* =========================================================
-   STORY HEART — SOFT BREATH
-   ========================================================= */
-
-.story-heart {
-
-    animation:
-        storyHeartBreath 4.5s ease-in-out infinite;
-
-}
-
-
-@keyframes storyHeartBreath {
-
-    0%,
-    100% {
-
-        opacity: 0.72;
-
-    }
-
-    50% {
-
-        opacity: 1;
-
-        text-shadow:
-            0 0 18px
-            rgba(225, 197, 141, 0.22);
-
-    }
-
-}
-
-
-/* =========================================================
-   INPUT DEPTH
-   ========================================================= */
-
-.input-group input {
-
-    box-shadow:
-        inset 0 1px 0
-        rgba(255, 255, 255, 0.018);
-
-}
-
-
-.input-group input:focus {
-
-    box-shadow:
-
-        inset 0 1px 0
-            rgba(255, 255, 255, 0.025),
-
-        0 0 0 3px
-            rgba(201, 166, 107, 0.045),
-
-        0 8px 24px
-            rgba(0, 0, 0, 0.14);
-
-}
-
-
-/* =========================================================
-   BUTTON — LIGHT SWEEP
-   ========================================================= */
-
-.login-button {
-
-    isolation: isolate;
-
-}
-
-
-.login-button::after {
-
-    content: "";
-
-    position: absolute;
-
-    top: -20%;
-
-    left: -35%;
-
-    width: 18%;
-
-    height: 140%;
-
-    transform:
-        rotate(18deg)
-        translateX(-220%);
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.10),
-            transparent
-        );
-
-    pointer-events: none;
-
-    transition:
-        transform 0.75s cubic-bezier(
+        transform 1.05s
+        cubic-bezier(
             0.22,
             1,
             0.36,
@@ -1587,101 +1427,369 @@ body {
 }
 
 
-.login-button:hover::after {
-
-    transform:
-        rotate(18deg)
-        translateX(850%);
-
-}
-
-
-/* =========================================================
-   SUBMITTING STATE
-   ========================================================= */
-
-.login-button.is-submitting {
-
-    cursor: wait;
-
-    pointer-events: none;
-
-    border-color:
-        rgba(225, 197, 141, 0.60);
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(201, 166, 107, 0.19),
-            rgba(201, 166, 107, 0.06)
-        );
-
-}
-
-
-.login-button.is-submitting .button-arrow {
-
-    opacity: 0.55;
+.login-page-ready .story-card {
 
     animation:
-        submittingArrow 1s ease-in-out infinite;
+        storyEntrance
+        1.1s
+        cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        )
+        forwards;
 
 }
 
 
-@keyframes submittingArrow {
-
-    0%,
-    100% {
-
-        transform:
-            translateX(0);
-
-        opacity: 0.4;
-
-    }
-
-    50% {
-
-        transform:
-            translateX(4px);
-
-        opacity: 0.9;
-
-    }
-
-}
-
-
-/* =========================================================
-   ERROR / MESSAGE STATE
-   ========================================================= */
-
-.login-message {
-
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
-
-}
-
-
-.login-message:not(:empty) {
-
-    animation:
-        messageAppear 0.35s ease both;
-
-}
-
-
-@keyframes messageAppear {
+@keyframes storyEntrance {
 
     from {
 
         opacity: 0;
 
         transform:
-            translateY(-4px);
+            translate3d(
+                -55px,
+                30px,
+                -70px
+            )
+            rotateY(11deg)
+            rotateZ(-2deg);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                -40px
+            )
+            rotateY(7deg)
+            rotateZ(-1.2deg);
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGIN CARD ENTRANCE
+   ========================================================= */
+
+.login-card {
+
+    transition:
+        opacity 0.9s ease,
+        transform 1.05s
+        cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        );
+
+}
+
+
+.login-page-ready .login-card {
+
+    animation:
+        loginEntrance
+        1.1s
+        0.16s
+        cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        )
+        forwards;
+
+}
+
+
+@keyframes loginEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translate3d(
+                55px,
+                -25px,
+                65px
+            )
+            rotateY(-9deg)
+            rotateZ(1.8deg);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                20px
+            )
+            rotateY(-3deg)
+            rotateZ(0.6deg);
+
+    }
+
+}
+
+
+/* =========================================================
+   PAGE SIGNATURE
+   ========================================================= */
+
+.login-page-ready .page-signature {
+
+    animation:
+        signatureReveal
+        0.8s
+        1.45s
+        ease-out
+        forwards;
+
+}
+
+
+@keyframes signatureReveal {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translate(-50%, 8px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translate(-50%, 0);
+
+    }
+
+}
+
+
+/* =========================================================
+   STORY CONTENT REVEAL
+   ========================================================= */
+
+.story-eyebrow,
+.story-card h1,
+.story-heart,
+.story-dates,
+.story-footer {
+
+    opacity: 0;
+
+    transform:
+        translateY(10px);
+
+}
+
+
+.login-page-ready .story-eyebrow {
+
+    animation:
+        contentReveal
+        0.55s
+        0.55s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .story-card h1 {
+
+    animation:
+        contentReveal
+        0.65s
+        0.67s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .story-heart {
+
+    animation:
+        storyHeartReveal
+        0.55s
+        0.94s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .story-dates {
+
+    animation:
+        contentReveal
+        0.65s
+        1.08s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .story-footer {
+
+    animation:
+        contentReveal
+        0.55s
+        1.30s
+        ease-out
+        forwards;
+
+}
+
+
+/* =========================================================
+   LOGIN CONTENT REVEAL
+   ========================================================= */
+
+.login-card .heart,
+.login-eyebrow,
+.login-card h2,
+.login-subtitle,
+.input-group,
+.login-button,
+.private-label {
+
+    opacity: 0;
+
+    transform:
+        translateY(10px);
+
+}
+
+
+.login-page-ready .login-card .heart {
+
+    animation:
+        heartReveal
+        0.55s
+        0.78s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .login-eyebrow {
+
+    animation:
+        contentReveal
+        0.50s
+        0.91s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .login-card h2 {
+
+    animation:
+        contentReveal
+        0.60s
+        0.99s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .login-subtitle {
+
+    animation:
+        contentReveal
+        0.55s
+        1.12s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .input-group:nth-of-type(1) {
+
+    animation:
+        contentReveal
+        0.50s
+        1.27s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .input-group:nth-of-type(2) {
+
+    animation:
+        contentReveal
+        0.50s
+        1.38s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .login-button {
+
+    animation:
+        contentReveal
+        0.55s
+        1.49s
+        ease-out
+        forwards;
+
+}
+
+
+.login-page-ready .private-label {
+
+    animation:
+        contentReveal
+        0.55s
+        1.68s
+        ease-out
+        forwards;
+
+}
+
+
+@keyframes contentReveal {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(10px);
 
     }
 
@@ -1698,7 +1806,273 @@ body {
 
 
 /* =========================================================
-   MOBILE — DISABLE DESKTOP ENTRANCE TRANSFORMS
+   HEART REVEAL
+   ========================================================= */
+
+@keyframes heartReveal {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(10px)
+            scale(0.90);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+@keyframes storyHeartReveal {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(10px)
+            scale(0.92);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* =========================================================
+   HEART — VERY SLOW BREATHING GLOW
+   ========================================================= */
+
+.login-page-ready .heart {
+
+    animation:
+        heartReveal
+        0.55s
+        0.78s
+        ease-out
+        forwards,
+        heartGlow
+        4.8s
+        1.9s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes heartGlow {
+
+    0%,
+    100% {
+
+        box-shadow:
+
+            0 0 0 6px
+                rgba(
+                    201,
+                    166,
+                    107,
+                    0.018
+                ),
+
+            0 8px 25px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.22
+                );
+
+    }
+
+    50% {
+
+        box-shadow:
+
+            0 0 0 8px
+                rgba(
+                    201,
+                    166,
+                    107,
+                    0.025
+                ),
+
+            0 0 28px
+                rgba(
+                    201,
+                    166,
+                    107,
+                    0.10
+                ),
+
+            0 8px 25px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.22
+                );
+
+    }
+
+}
+
+
+/* =========================================================
+   STORY HEART — SUBTLE GLOW
+   ========================================================= */
+
+.login-page-ready .story-heart {
+
+    animation:
+        storyHeartReveal
+        0.55s
+        0.94s
+        ease-out
+        forwards,
+        storyHeartGlow
+        5.5s
+        2s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes storyHeartGlow {
+
+    0%,
+    100% {
+
+        text-shadow:
+            none;
+
+    }
+
+    50% {
+
+        text-shadow:
+            0 0 18px
+            rgba(
+                225,
+                197,
+                141,
+                0.20
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGIN CARD — VERY SUBTLE FLOAT
+   ========================================================= */
+
+@keyframes loginCardFloat {
+
+    0%,
+    100% {
+
+        margin-top: 0;
+
+    }
+
+    50% {
+
+        margin-top: -3px;
+
+    }
+
+}
+
+
+/* =========================================================
+   PRIVATE ARCHIVE LINES
+   ========================================================= */
+
+.private-line {
+
+    transform:
+        scaleX(0.65);
+
+    transform-origin:
+        center;
+
+    transition:
+        transform 0.8s ease;
+
+}
+
+
+.login-page-ready .private-line {
+
+    transform:
+        scaleX(1);
+
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+   ========================================================= */
+
+.login-message:not(:empty) {
+
+    animation:
+        messageAppear
+        0.35s
+        ease-out
+        both;
+
+}
+
+
+@keyframes messageAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-5px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE — CLEAN CINEMATIC VERSION
    ========================================================= */
 
 @media (max-width: 720px) {
@@ -1708,44 +2082,100 @@ body {
 
         opacity: 0;
 
-        transform: translateY(18px);
+        transform:
+            translateY(24px);
 
     }
 
 
     .login-page-ready .story-card {
 
-        opacity: 1;
-
-        transform: translateY(0);
-
         animation:
-            none;
+            mobileStoryEntrance
+            0.85s
+            ease-out
+            forwards;
 
     }
 
 
     .login-page-ready .login-card {
 
-        opacity: 1;
-
-        transform: translateY(0);
+        animation:
+            mobileLoginEntrance
+            0.85s
+            0.12s
+            ease-out
+            forwards;
 
     }
 
 
-    .story-heart {
+    @keyframes mobileStoryEntrance {
 
-        animation:
-            none;
+        from {
+
+            opacity: 0;
+
+            transform:
+                translateY(24px);
+
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform:
+                translateY(0);
+
+        }
 
     }
 
 
-    .heart {
+    @keyframes mobileLoginEntrance {
+
+        from {
+
+            opacity: 0;
+
+            transform:
+                translateY(24px);
+
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform:
+                translateY(0);
+
+        }
+
+    }
+
+
+    /* Keep mobile calm */
+
+    .login-page-ready .login-card {
 
         animation:
-            heartBreath 4.2s ease-in-out infinite;
+            mobileLoginEntrance
+            0.85s
+            0.12s
+            ease-out
+            forwards;
+
+    }
+
+
+    .ambient-glow-one,
+    .ambient-glow-two {
+
+        animation-duration:
+            20s;
 
     }
 
@@ -1753,37 +2183,40 @@ body {
 
 
 /* =========================================================
-   REDUCED MOTION — OVERRIDE EVERYTHING
+   REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
+    .ambient-glow-one,
+    .ambient-glow-two,
     .story-card,
     .login-card,
-    .page-signature {
+    .page-signature,
+    .story-eyebrow,
+    .story-card h1,
+    .story-heart,
+    .story-dates,
+    .story-footer,
+    .login-card .heart,
+    .login-eyebrow,
+    .login-card h2,
+    .login-subtitle,
+    .input-group,
+    .login-button,
+    .private-label,
+    .private-line {
+
+        animation:
+            none !important;
+
+        transition:
+            none !important;
 
         opacity: 1 !important;
 
-        transform: none !important;
-
-        animation: none !important;
-
-        transition: none !important;
-
-    }
-
-
-    .heart,
-    .story-heart {
-
-        animation: none !important;
-
-    }
-
-
-    .login-button::after {
-
-        display: none;
+        transform:
+            none !important;
 
     }
 
