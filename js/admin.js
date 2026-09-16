@@ -1,12 +1,21 @@
 /* =========================================================
    OUR STORY TIMELINE — ADMIN PANEL
-   Premium Admin Experience
+   Fully matched to current admin.html + admin.css
    ========================================================= */
 
 
 /* =========================================================
    1. DOM REFERENCES
    ========================================================= */
+
+const addMemoryButton =
+    document.getElementById("addMemoryButton");
+
+const closeFormButton =
+    document.getElementById("closeFormButton");
+
+const memoryFormSection =
+    document.getElementById("memoryFormSection");
 
 const memoryForm =
     document.getElementById("memoryForm");
@@ -30,7 +39,7 @@ const locationInput =
     document.getElementById("location");
 
 const photoInput =
-    document.getElementById("photo");
+    document.getElementById("memoryPhoto");
 
 const photoPreview =
     document.getElementById("photoPreview");
@@ -39,34 +48,47 @@ const photoPreviewImage =
     document.getElementById("photoPreviewImage");
 
 const removePhotoButton =
-    document.getElementById("removePhoto");
+    document.getElementById("removePhotoButton");
 
-const existingPhotoUrlInput =
-    document.getElementById("existingPhotoUrl");
+const cancelButton =
+    document.getElementById("cancelButton");
 
-const submitButton =
-    document.getElementById("saveMemory");
+const saveButton =
+    memoryForm?.querySelector(
+        'button[type="submit"]'
+    );
 
-const cancelEditButton =
-    document.getElementById("cancelEdit");
+const saveButtonLabel =
+    saveButton?.querySelector(
+        ".save-button-label"
+    );
 
 const formTitle =
     document.getElementById("formTitle");
 
-const memoryList =
-    document.getElementById("memoryList");
+const formEyebrow =
+    document.getElementById("formEyebrow");
+
+const formMessage =
+    document.getElementById("formMessage");
+
+const memoriesList =
+    document.getElementById("memoriesList");
 
 const memorySearch =
     document.getElementById("memorySearch");
 
+const clearSearch =
+    document.getElementById("clearSearch");
+
 const categoryFilter =
     document.getElementById("categoryFilter");
 
-const sortMemories =
-    document.getElementById("sortMemories");
+const sortOrder =
+    document.getElementById("sortOrder");
 
-const logoutButton =
-    document.getElementById("logoutButton");
+const visibleCount =
+    document.getElementById("visibleCount");
 
 const memoryCount =
     document.getElementById("memoryCount");
@@ -80,17 +102,23 @@ const photoCount =
 const archiveResultInfo =
     document.getElementById("archiveResultInfo");
 
+const logoutButton =
+    document.getElementById("logoutButton");
+
 const deleteModal =
     document.getElementById("deleteModal");
 
-const deleteModalCancel =
-    document.getElementById("deleteModalCancel");
+const cancelDeleteButton =
+    document.getElementById("cancelDeleteButton");
 
-const deleteModalConfirm =
-    document.getElementById("deleteModalConfirm");
+const confirmDeleteButton =
+    document.getElementById("confirmDeleteButton");
 
-const toastContainer =
-    document.getElementById("toastContainer");
+const deleteModalText =
+    document.getElementById("deleteModalText");
+
+const toast =
+    document.getElementById("toast");
 
 
 /* =========================================================
@@ -105,7 +133,11 @@ let deletingMemoryId = null;
 
 let selectedPhotoFile = null;
 
-let removeExistingPhoto = false;
+let existingPhotoUrl = null;
+
+let photoWasRemoved = false;
+
+let newlyUploadedPhotoUrl = null;
 
 
 /* =========================================================
@@ -114,39 +146,41 @@ let removeExistingPhoto = false;
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
-
-        initializeAdmin();
-
-    }
+    initializeAdmin
 );
 
-
-/* =========================================================
-   4. INITIALIZE ADMIN
-   ========================================================= */
 
 async function initializeAdmin() {
 
     try {
 
-        await checkAuthentication();
+        const authenticated =
+            await checkAuthentication();
 
-        setupForm();
+        if (!authenticated) {
+            return;
+        }
+
+
+        setupMemoryForm();
+
+        setupAddMemoryButton();
 
         setupPhotoUpload();
 
         setupSearch();
 
-        setupCategoryFilter();
+        setupFilters();
 
         setupSorting();
 
-        setupLogout();
-
         setupDeleteModal();
 
-        loadMemories();
+        setupLogout();
+
+
+        await loadMemories();
+
 
     } catch (error) {
 
@@ -155,9 +189,8 @@ async function initializeAdmin() {
             error
         );
 
-        showToast(
-            "Unable to initialize the admin panel.",
-            "error"
+        showError(
+            "Unable to initialize the archive."
         );
 
     }
@@ -166,10 +199,26 @@ async function initializeAdmin() {
 
 
 /* =========================================================
-   5. AUTHENTICATION
+   4. AUTHENTICATION
    ========================================================= */
 
 async function checkAuthentication() {
+
+    if (
+        !window.supabaseClient
+    ) {
+
+        console.error(
+            "Supabase client is not available."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
 
     const {
         data,
@@ -183,41 +232,41 @@ async function checkAuthentication() {
     if (error) {
 
         console.error(
-            "Session error:",
+            "Authentication error:",
             error
         );
 
         window.location.href =
             "login.html";
 
-        return;
+        return false;
 
     }
 
 
-    const session =
-        data?.session;
-
-
-    if (!session) {
+    if (!data?.session) {
 
         window.location.href =
             "login.html";
 
-        return;
+        return false;
 
     }
+
+
+    return true;
 
 }
 
 
 /* =========================================================
-   6. LOAD MEMORIES
+   5. LOAD MEMORIES
    ========================================================= */
 
 async function loadMemories() {
 
-    showLoadingState();
+    showLoading();
+
 
     try {
 
@@ -231,7 +280,7 @@ async function loadMemories() {
                 .order(
                     "event_date",
                     {
-                        ascending: false
+                        ascending: true
                     }
                 );
 
@@ -239,11 +288,12 @@ async function loadMemories() {
         if (error) {
 
             console.error(
-                "Load memories error:",
+                "Supabase memory query error:",
                 error
             );
 
-            showErrorState(
+            showError(
+                error.message ||
                 "Unable to load memories."
             );
 
@@ -262,15 +312,17 @@ async function loadMemories() {
 
         renderMemories();
 
+
     } catch (error) {
 
         console.error(
-            "Unexpected load error:",
+            "Unexpected memory loading error:",
             error
         );
 
-        showErrorState(
-            "Something went wrong while loading the archive."
+        showError(
+            error.message ||
+            "Something went wrong while loading memories."
         );
 
     }
@@ -279,7 +331,7 @@ async function loadMemories() {
 
 
 /* =========================================================
-   7. UPDATE STATISTICS
+   6. UPDATE STATISTICS
    ========================================================= */
 
 function updateStatistics() {
@@ -293,11 +345,12 @@ function updateStatistics() {
             memory =>
                 String(
                     memory.category || ""
-                ).toLowerCase() === "milestone"
+                ).toLowerCase() ===
+                "milestone"
         ).length;
 
 
-    const photos =
+    const photographs =
         allMemories.filter(
             memory =>
                 Boolean(
@@ -308,30 +361,24 @@ function updateStatistics() {
 
     if (memoryCount) {
 
-        animateNumber(
-            memoryCount,
-            total
-        );
+        memoryCount.textContent =
+            total;
 
     }
 
 
     if (milestoneCount) {
 
-        animateNumber(
-            milestoneCount,
-            milestones
-        );
+        milestoneCount.textContent =
+            milestones;
 
     }
 
 
     if (photoCount) {
 
-        animateNumber(
-            photoCount,
-            photos
-        );
+        photoCount.textContent =
+            photographs;
 
     }
 
@@ -339,91 +386,46 @@ function updateStatistics() {
 
 
 /* =========================================================
-   8. NUMBER ANIMATION
-   ========================================================= */
-
-function animateNumber(
-    element,
-    target
-) {
-
-    const duration = 500;
-
-    const startTime =
-        performance.now();
-
-
-    function update(
-        currentTime
-    ) {
-
-        const elapsed =
-            currentTime -
-            startTime;
-
-
-        const progress =
-            Math.min(
-                elapsed / duration,
-                1
-            );
-
-
-        const eased =
-            1 -
-            Math.pow(
-                1 - progress,
-                3
-            );
-
-
-        element.textContent =
-            Math.round(
-                target * eased
-            );
-
-
-        if (progress < 1) {
-
-            requestAnimationFrame(
-                update
-            );
-
-        }
-
-    }
-
-
-    requestAnimationFrame(
-        update
-    );
-
-}
-
-
-/* =========================================================
-   9. RENDER MEMORIES
+   7. RENDER MEMORIES
    ========================================================= */
 
 function renderMemories() {
+
+    if (!memoriesList) {
+
+        console.error(
+            "memoriesList element not found."
+        );
+
+        return;
+
+    }
+
 
     let filtered =
         [...allMemories];
 
 
     const searchTerm =
-        memorySearch
-            ?.value
+        memorySearch?.value
             ?.trim()
-            .toLowerCase() || "";
+            .toLowerCase() ||
+        "";
 
 
-    const category =
-        categoryFilter
-            ?.value
-            ?.trim()
-            .toLowerCase() || "";
+    const selectedCategory =
+        categoryFilter?.value ||
+        "all";
 
+
+    const selectedSort =
+        sortOrder?.value ||
+        "asc";
+
+
+    /* -----------------------------------------------------
+       SEARCH
+       ----------------------------------------------------- */
 
     if (searchTerm) {
 
@@ -458,27 +460,32 @@ function renderMemories() {
     }
 
 
+    /* -----------------------------------------------------
+       CATEGORY FILTER
+       ----------------------------------------------------- */
+
     if (
-        category &&
-        category !== "all"
+        selectedCategory !==
+        "all"
     ) {
 
         filtered =
             filtered.filter(
                 memory =>
                     String(
-                        memory.category || ""
+                        memory.category ||
+                        ""
                     ).toLowerCase() ===
-                    category
+                    selectedCategory
+                        .toLowerCase()
             );
 
     }
 
 
-    const sortValue =
-        sortMemories
-            ?.value || "newest";
-
+    /* -----------------------------------------------------
+       SORT
+       ----------------------------------------------------- */
 
     filtered.sort(
         (
@@ -486,76 +493,77 @@ function renderMemories() {
             second
         ) => {
 
-            const dateA =
+            const firstDate =
                 parseDate(
                     first.event_date
                 );
 
-            const dateB =
+            const secondDate =
                 parseDate(
                     second.event_date
                 );
 
 
             if (
-                sortValue === "oldest"
+                selectedSort ===
+                "desc"
             ) {
 
-                return dateA - dateB;
-
-            }
-
-
-            if (
-                sortValue === "title"
-            ) {
-
-                return String(
-                    first.title || ""
-                ).localeCompare(
-                    String(
-                        second.title || ""
-                    )
+                return (
+                    secondDate -
+                    firstDate
                 );
 
             }
 
 
-            return dateB - dateA;
+            return (
+                firstDate -
+                secondDate
+            );
 
         }
     );
 
 
-    updateArchiveResultInfo(
+    /* -----------------------------------------------------
+       RESULT COUNTER
+       ----------------------------------------------------- */
+
+    updateVisibleCount(
+        filtered.length
+    );
+
+
+    updateSearchResult(
         filtered.length,
         searchTerm
     );
 
 
-    if (!memoryList) {
+    /* -----------------------------------------------------
+       EMPTY STATE
+       ----------------------------------------------------- */
+
+    if (
+        filtered.length === 0
+    ) {
+
+        showEmpty();
 
         return;
 
     }
 
 
-    if (!filtered.length) {
+    /* -----------------------------------------------------
+       RENDER CARDS
+       ----------------------------------------------------- */
 
-        showEmptyState();
-
-        return;
-
-    }
-
-
-    memoryList.innerHTML =
+    memoriesList.innerHTML =
         filtered
             .map(
-                memory =>
-                    createMemoryCard(
-                        memory
-                    )
+                createMemoryCard
             )
             .join("");
 
@@ -566,7 +574,7 @@ function renderMemories() {
 
 
 /* =========================================================
-   10. CREATE MEMORY CARD
+   8. CREATE MEMORY CARD
    ========================================================= */
 
 function createMemoryCard(
@@ -574,7 +582,7 @@ function createMemoryCard(
 ) {
 
     const date =
-        formatDisplayDate(
+        formatDate(
             memory.event_date
         );
 
@@ -583,7 +591,7 @@ function createMemoryCard(
         String(
             memory.category ||
             "memory"
-        );
+        ).toLowerCase();
 
 
     const categoryLabel =
@@ -618,13 +626,20 @@ function createMemoryCard(
                     >
                 </div>
             `
-            : "";
+            : `
+                <div
+                    class="admin-memory-photo"
+                    aria-hidden="true"
+                >
+                    ♡
+                </div>
+            `;
 
 
-    const description =
+    const descriptionMarkup =
         memory.description
             ? `
-                <p class="admin-memory-description">
+                <p>
                     ${escapeHTML(
                         memory.description
                     )}
@@ -633,16 +648,14 @@ function createMemoryCard(
             : "";
 
 
-    const location =
+    const locationMarkup =
         memory.location
             ? `
-                <div class="admin-memory-location">
-                    <span aria-hidden="true">⌖</span>
-                    <span>
-                        ${escapeHTML(
-                            memory.location
-                        )}
-                    </span>
+                <div class="memory-location">
+                    ⌖
+                    ${escapeHTML(
+                        memory.location
+                    )}
                 </div>
             `
             : "";
@@ -650,7 +663,7 @@ function createMemoryCard(
 
     return `
         <article
-            class="admin-memory-card"
+            class="memory-card"
             data-memory-id="${escapeAttribute(
                 memory.id
             )}"
@@ -658,39 +671,28 @@ function createMemoryCard(
 
             ${photoMarkup}
 
-            <div class="admin-memory-content">
 
-                <div class="admin-memory-top">
+            <div class="memory-content">
 
-                    <div class="admin-memory-category">
-                        <span
-                            class="admin-memory-category-icon"
-                            aria-hidden="true"
-                        >
-                            ${categoryIcon}
-                        </span>
+                <div class="memory-category">
+                    <span aria-hidden="true">
+                        ${categoryIcon}
+                    </span>
 
-                        <span>
-                            ${escapeHTML(
-                                categoryLabel
-                            )}
-                        </span>
-                    </div>
-
-                    <time
-                        class="admin-memory-date"
-                        datetime="${escapeAttribute(
-                            memory.event_date ||
-                            ""
-                        )}"
-                    >
-                        ${escapeHTML(date)}
-                    </time>
-
+                    ${escapeHTML(
+                        categoryLabel
+                    )}
                 </div>
 
 
-                <h3 class="admin-memory-title">
+                <div class="memory-date">
+                    ${escapeHTML(
+                        date
+                    )}
+                </div>
+
+
+                <h3>
                     ${escapeHTML(
                         memory.title ||
                         "Untitled memory"
@@ -698,34 +700,37 @@ function createMemoryCard(
                 </h3>
 
 
-                ${description}
+                ${descriptionMarkup}
 
-                ${location}
+                ${locationMarkup}
+
+            </div>
 
 
-                <div class="admin-memory-actions">
+            <div class="memory-actions">
 
-                    <button
-                        type="button"
-                        class="admin-action-button edit-memory"
-                        data-id="${escapeAttribute(
-                            memory.id
-                        )}"
-                    >
-                        Edit
-                    </button>
+                <button
+                    type="button"
+                    class="edit-button"
+                    data-action="edit"
+                    data-id="${escapeAttribute(
+                        memory.id
+                    )}"
+                >
+                    Edit
+                </button>
 
-                    <button
-                        type="button"
-                        class="admin-action-button delete-memory"
-                        data-id="${escapeAttribute(
-                            memory.id
-                        )}"
-                    >
-                        Delete
-                    </button>
 
-                </div>
+                <button
+                    type="button"
+                    class="delete-button"
+                    data-action="delete"
+                    data-id="${escapeAttribute(
+                        memory.id
+                    )}"
+                >
+                    Delete
+                </button>
 
             </div>
 
@@ -736,68 +741,148 @@ function createMemoryCard(
 
 
 /* =========================================================
-   11. ATTACH CARD EVENTS
+   9. MEMORY CARD EVENTS
    ========================================================= */
 
 function attachMemoryCardEvents() {
 
-    document
-        .querySelectorAll(
-            ".edit-memory"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const id =
-                            button.dataset.id;
-
-                        startEditingMemory(
-                            id
-                        );
-
-                    }
-                );
-
-            }
+    const editButtons =
+        document.querySelectorAll(
+            '[data-action="edit"]'
         );
 
 
-    document
-        .querySelectorAll(
-            ".delete-memory"
-        )
-        .forEach(
-            button => {
+    editButtons.forEach(
+        button => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                        const id =
-                            button.dataset.id;
+                    startEditingMemory(
+                        button.dataset.id
+                    );
 
-                        openDeleteModal(
-                            id
-                        );
+                }
+            );
 
-                    }
-                );
+        }
+    );
 
-            }
+
+    const deleteButtons =
+        document.querySelectorAll(
+            '[data-action="delete"]'
         );
+
+
+    deleteButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    openDeleteModal(
+                        button.dataset.id
+                    );
+
+                }
+            );
+
+        }
+    );
 
 }
 
 
 /* =========================================================
-   12. SETUP FORM
+   10. ADD MEMORY BUTTON
    ========================================================= */
 
-function setupForm() {
+function setupAddMemoryButton() {
+
+    if (!addMemoryButton) {
+
+        return;
+
+    }
+
+
+    addMemoryButton.addEventListener(
+        "click",
+        () => {
+
+            resetForm();
+
+            showMemoryForm();
+
+            setTimeout(
+                () => {
+
+                    eventDateInput?.focus();
+
+                },
+                300
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   11. SHOW FORM
+   ========================================================= */
+
+function showMemoryForm() {
+
+    if (!memoryFormSection) {
+
+        return;
+
+    }
+
+
+    memoryFormSection.classList.remove(
+        "hidden"
+    );
+
+
+    memoryFormSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+/* =========================================================
+   12. HIDE FORM
+   ========================================================= */
+
+function hideMemoryForm() {
+
+    if (!memoryFormSection) {
+
+        return;
+
+    }
+
+
+    memoryFormSection.classList.add(
+        "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   13. MEMORY FORM SETUP
+   ========================================================= */
+
+function setupMemoryForm() {
 
     if (!memoryForm) {
 
@@ -812,20 +897,34 @@ function setupForm() {
     );
 
 
-    if (cancelEditButton) {
+    closeFormButton?.addEventListener(
+        "click",
+        () => {
 
-        cancelEditButton.addEventListener(
-            "click",
-            cancelEditing
-        );
+            resetForm();
 
-    }
+            hideMemoryForm();
+
+        }
+    );
+
+
+    cancelButton?.addEventListener(
+        "click",
+        () => {
+
+            resetForm();
+
+            hideMemoryForm();
+
+        }
+    );
 
 }
 
 
 /* =========================================================
-   13. HANDLE FORM SUBMIT
+   14. FORM SUBMIT
    ========================================================= */
 
 async function handleFormSubmit(
@@ -836,41 +935,39 @@ async function handleFormSubmit(
 
 
     const eventDate =
-        eventDateInput
-            ?.value
+        eventDateInput?.value
             ?.trim();
 
 
     const title =
-        titleInput
-            ?.value
+        titleInput?.value
             ?.trim();
 
 
     const description =
-        descriptionInput
-            ?.value
+        descriptionInput?.value
             ?.trim();
 
 
     const category =
-        categoryInput
-            ?.value
+        categoryInput?.value
             ?.trim() ||
         "memory";
 
 
     const location =
-        locationInput
-            ?.value
+        locationInput?.value
             ?.trim();
 
 
+    /* -----------------------------------------------------
+       VALIDATION
+       ----------------------------------------------------- */
+
     if (!eventDate) {
 
-        showToast(
-            "Please choose a date.",
-            "error"
+        showFormMessage(
+            "Please choose a date."
         );
 
         eventDateInput?.focus();
@@ -882,9 +979,8 @@ async function handleFormSubmit(
 
     if (!title) {
 
-        showToast(
-            "Please enter a memory title.",
-            "error"
+        showFormMessage(
+            "Please enter a title."
         );
 
         titleInput?.focus();
@@ -894,48 +990,64 @@ async function handleFormSubmit(
     }
 
 
-    setFormLoading(
+    setSavingState(
         true
     );
 
 
+    let uploadedPhotoUrl =
+        null;
+
+
     try {
 
-        let photoUrl =
-            existingPhotoUrlInput
-                ?.value
-                ?.trim() || null;
-
-
-        /*
-         * If the user selected a new photo,
-         * upload it before saving the memory.
-         */
+        /* -------------------------------------------------
+           UPLOAD NEW PHOTO
+           ------------------------------------------------- */
 
         if (selectedPhotoFile) {
 
-            photoUrl =
+            uploadedPhotoUrl =
                 await uploadPhoto(
                     selectedPhotoFile
                 );
 
+            newlyUploadedPhotoUrl =
+                uploadedPhotoUrl;
+
         }
 
 
-        /*
-         * If editing and the existing photo
-         * was explicitly removed.
-         */
+        /* -------------------------------------------------
+           DETERMINE PHOTO URL
+           ------------------------------------------------- */
+
+        let photoUrl =
+            existingPhotoUrl;
+
+
+        if (uploadedPhotoUrl) {
+
+            photoUrl =
+                uploadedPhotoUrl;
+
+        }
+
 
         if (
-            editingMemoryId &&
-            removeExistingPhoto
+            photoWasRemoved &&
+            !uploadedPhotoUrl
         ) {
 
-            photoUrl = null;
+            photoUrl =
+                null;
 
         }
 
+
+        /* -------------------------------------------------
+           PAYLOAD
+           ------------------------------------------------- */
 
         const payload = {
 
@@ -962,6 +1074,10 @@ async function handleFormSubmit(
         };
 
 
+        /* -------------------------------------------------
+           INSERT / UPDATE
+           ------------------------------------------------- */
+
         if (editingMemoryId) {
 
             await updateMemory(
@@ -978,9 +1094,60 @@ async function handleFormSubmit(
         }
 
 
+        /* -------------------------------------------------
+           DELETE OLD PHOTO IF REPLACED / REMOVED
+           ------------------------------------------------- */
+
+        if (
+            editingMemoryId &&
+            existingPhotoUrl &&
+            (
+                uploadedPhotoUrl ||
+                photoWasRemoved
+            )
+        ) {
+
+            try {
+
+                await deletePhotoFromStorage(
+                    existingPhotoUrl
+                );
+
+            } catch (
+                photoCleanupError
+            ) {
+
+                console.warn(
+                    "Old photo cleanup warning:",
+                    photoCleanupError
+                );
+
+            }
+
+        }
+
+
+        showFormMessage(
+            editingMemoryId
+                ? "Memory updated."
+                : "Memory preserved."
+        );
+
+
+        showToast(
+            editingMemoryId
+                ? "Memory updated successfully."
+                : "Memory added to our story.",
+            "success"
+        );
+
+
         resetForm();
 
+        hideMemoryForm();
+
         await loadMemories();
+
 
     } catch (error) {
 
@@ -989,15 +1156,52 @@ async function handleFormSubmit(
             error
         );
 
+
+        /*
+         * If a new photo uploaded successfully
+         * but the database operation failed,
+         * remove the orphaned upload.
+         */
+
+        if (
+            newlyUploadedPhotoUrl
+        ) {
+
+            try {
+
+                await deletePhotoFromStorage(
+                    newlyUploadedPhotoUrl
+                );
+
+            } catch (
+                cleanupError
+            ) {
+
+                console.warn(
+                    "Failed to clean uploaded photo:",
+                    cleanupError
+                );
+
+            }
+
+        }
+
+
+        showFormMessage(
+            error.message ||
+            "Unable to save memory."
+        );
+
+
         showToast(
-            error?.message ||
+            error.message ||
             "Unable to save memory.",
             "error"
         );
 
     } finally {
 
-        setFormLoading(
+        setSavingState(
             false
         );
 
@@ -1007,7 +1211,7 @@ async function handleFormSubmit(
 
 
 /* =========================================================
-   14. CREATE MEMORY
+   15. CREATE MEMORY
    ========================================================= */
 
 async function createMemory(
@@ -1030,17 +1234,11 @@ async function createMemory(
 
     }
 
-
-    showToast(
-        "Memory added to our story.",
-        "success"
-    );
-
 }
 
 
 /* =========================================================
-   15. UPDATE MEMORY
+   16. UPDATE MEMORY
    ========================================================= */
 
 async function updateMemory(
@@ -1068,17 +1266,11 @@ async function updateMemory(
 
     }
 
-
-    showToast(
-        "Memory updated successfully.",
-        "success"
-    );
-
 }
 
 
 /* =========================================================
-   16. START EDITING
+   17. START EDITING
    ========================================================= */
 
 function startEditingMemory(
@@ -1096,7 +1288,7 @@ function startEditingMemory(
     if (!memory) {
 
         showToast(
-            "Memory could not be found.",
+            "Memory not found.",
             "error"
         );
 
@@ -1109,11 +1301,20 @@ function startEditingMemory(
         memory.id;
 
 
-    removeExistingPhoto =
-        false;
+    existingPhotoUrl =
+        memory.photo_url ||
+        null;
 
 
     selectedPhotoFile =
+        null;
+
+
+    photoWasRemoved =
+        false;
+
+
+    newlyUploadedPhotoUrl =
         null;
 
 
@@ -1128,7 +1329,8 @@ function startEditingMemory(
     if (eventDateInput) {
 
         eventDateInput.value =
-            memory.event_date || "";
+            memory.event_date ||
+            "";
 
     }
 
@@ -1136,7 +1338,8 @@ function startEditingMemory(
     if (titleInput) {
 
         titleInput.value =
-            memory.title || "";
+            memory.title ||
+            "";
 
     }
 
@@ -1144,7 +1347,8 @@ function startEditingMemory(
     if (descriptionInput) {
 
         descriptionInput.value =
-            memory.description || "";
+            memory.description ||
+            "";
 
     }
 
@@ -1161,30 +1365,18 @@ function startEditingMemory(
     if (locationInput) {
 
         locationInput.value =
-            memory.location || "";
-
-    }
-
-
-    if (existingPhotoUrlInput) {
-
-        existingPhotoUrlInput.value =
-            memory.photo_url || "";
+            memory.location ||
+            "";
 
     }
 
 
     if (
-        memory.photo_url &&
-        photoPreview &&
-        photoPreviewImage
+        memory.photo_url
     ) {
 
-        photoPreviewImage.src =
-            memory.photo_url;
-
-        photoPreview.classList.remove(
-            "hidden"
+        showPhotoPreview(
+            memory.photo_url
         );
 
     } else {
@@ -1197,69 +1389,28 @@ function startEditingMemory(
     if (formTitle) {
 
         formTitle.textContent =
-            "Edit Memory";
+            "Edit your memory";
 
     }
 
 
-    if (submitButton) {
+    if (formEyebrow) {
 
-        submitButton.textContent =
+        formEyebrow.textContent =
+            "EDIT MEMORY";
+
+    }
+
+
+    if (saveButtonLabel) {
+
+        saveButtonLabel.textContent =
             "Save Changes";
 
     }
 
 
-    if (cancelEditButton) {
-
-        cancelEditButton.classList.remove(
-            "hidden"
-        );
-
-    }
-
-
-    /*
-     * Scroll to form.
-     */
-
-    const formSection =
-        memoryForm?.closest(
-            "section"
-        ) ||
-        memoryForm;
-
-
-    formSection?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-
-
-    setTimeout(
-        () => {
-
-            titleInput?.focus();
-
-        },
-        500
-    );
-
-}
-
-
-/* =========================================================
-   17. CANCEL EDITING
-   ========================================================= */
-
-function cancelEditing() {
-
-    resetForm();
-
-    showToast(
-        "Editing cancelled.",
-        "info"
-    );
+    showMemoryForm();
 
 }
 
@@ -1274,19 +1425,23 @@ function resetForm() {
         null;
 
 
+    existingPhotoUrl =
+        null;
+
+
     selectedPhotoFile =
         null;
 
 
-    removeExistingPhoto =
+    photoWasRemoved =
         false;
 
 
-    if (memoryForm) {
+    newlyUploadedPhotoUrl =
+        null;
 
-        memoryForm.reset();
 
-    }
+    memoryForm?.reset();
 
 
     if (memoryIdInput) {
@@ -1297,9 +1452,33 @@ function resetForm() {
     }
 
 
-    if (existingPhotoUrlInput) {
+    if (formTitle) {
 
-        existingPhotoUrlInput.value =
+        formTitle.textContent =
+            "Preserve a special moment";
+
+    }
+
+
+    if (formEyebrow) {
+
+        formEyebrow.textContent =
+            "NEW MEMORY";
+
+    }
+
+
+    if (saveButtonLabel) {
+
+        saveButtonLabel.textContent =
+            "Save Memory";
+
+    }
+
+
+    if (formMessage) {
+
+        formMessage.textContent =
             "";
 
     }
@@ -1307,72 +1486,51 @@ function resetForm() {
 
     hidePhotoPreview();
 
-
-    if (formTitle) {
-
-        formTitle.textContent =
-            "Add a Memory";
-
-    }
-
-
-    if (submitButton) {
-
-        submitButton.textContent =
-            "Save Memory";
-
-    }
-
-
-    if (cancelEditButton) {
-
-        cancelEditButton.classList.add(
-            "hidden"
-        );
-
-    }
-
 }
 
 
 /* =========================================================
-   19. FORM LOADING STATE
+   19. SAVE BUTTON STATE
    ========================================================= */
 
-function setFormLoading(
-    loading
+function setSavingState(
+    isSaving
 ) {
 
-    if (!submitButton) {
+    if (!saveButton) {
 
         return;
 
     }
 
 
-    submitButton.disabled =
-        loading;
+    saveButton.disabled =
+        isSaving;
 
 
-    if (loading) {
+    saveButton.classList.toggle(
+        "is-saving",
+        isSaving
+    );
 
-        submitButton.dataset.originalText =
-            submitButton.textContent;
 
-        submitButton.textContent =
-            editingMemoryId
-                ? "Saving..."
-                : "Adding...";
+    if (saveButtonLabel) {
 
-    } else {
+        if (isSaving) {
 
-        submitButton.textContent =
-            submitButton.dataset.originalText ||
-            (
+            saveButtonLabel.textContent =
+                editingMemoryId
+                    ? "Saving..."
+                    : "Preserving...";
+
+        } else {
+
+            saveButtonLabel.textContent =
                 editingMemoryId
                     ? "Save Changes"
-                    : "Save Memory"
-            );
+                    : "Save Memory";
+
+        }
 
     }
 
@@ -1398,14 +1556,10 @@ function setupPhotoUpload() {
     );
 
 
-    if (removePhotoButton) {
-
-        removePhotoButton.addEventListener(
-            "click",
-            handlePhotoRemoval
-        );
-
-    }
+    removePhotoButton?.addEventListener(
+        "click",
+        removeSelectedPhoto
+    );
 
 }
 
@@ -1429,18 +1583,29 @@ function handlePhotoSelection(
     }
 
 
-    /*
-     * File type validation.
-     */
+    /* -----------------------------------------------------
+       TYPE
+       ----------------------------------------------------- */
+
+    const allowedTypes = [
+
+        "image/jpeg",
+
+        "image/png",
+
+        "image/webp"
+
+    ];
+
 
     if (
-        !file.type.startsWith(
-            "image/"
+        !allowedTypes.includes(
+            file.type
         )
     ) {
 
         showToast(
-            "Please select an image file.",
+            "Please choose a JPG, PNG or WebP image.",
             "error"
         );
 
@@ -1452,12 +1617,12 @@ function handlePhotoSelection(
     }
 
 
-    /*
-     * Maximum 10 MB.
-     */
+    /* -----------------------------------------------------
+       SIZE — 5 MB
+       ----------------------------------------------------- */
 
     const maxSize =
-        10 * 1024 * 1024;
+        5 * 1024 * 1024;
 
 
     if (
@@ -1466,7 +1631,7 @@ function handlePhotoSelection(
     ) {
 
         showToast(
-            "Image must be smaller than 10 MB.",
+            "Photograph must be smaller than 5 MB.",
             "error"
         );
 
@@ -1482,34 +1647,28 @@ function handlePhotoSelection(
         file;
 
 
-    removeExistingPhoto =
+    photoWasRemoved =
         false;
 
 
-    const objectUrl =
+    const previewUrl =
         URL.createObjectURL(
             file
         );
 
 
-    if (
-        photoPreview &&
-        photoPreviewImage
-    ) {
+    showPhotoPreview(
+        previewUrl
+    );
 
-        photoPreviewImage.src =
-            objectUrl;
 
-        photoPreview.classList.remove(
-            "hidden"
-        );
-
+    if (photoPreviewImage) {
 
         photoPreviewImage.onload =
             () => {
 
                 URL.revokeObjectURL(
-                    objectUrl
+                    previewUrl
                 );
 
             };
@@ -1520,13 +1679,46 @@ function handlePhotoSelection(
 
 
 /* =========================================================
-   22. REMOVE PHOTO
+   22. SHOW PHOTO PREVIEW
    ========================================================= */
 
-function handlePhotoRemoval() {
+function showPhotoPreview(
+    source
+) {
+
+    if (
+        !photoPreview ||
+        !photoPreviewImage
+    ) {
+
+        return;
+
+    }
+
+
+    photoPreviewImage.src =
+        source;
+
+
+    photoPreview.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   23. REMOVE PHOTO
+   ========================================================= */
+
+function removeSelectedPhoto() {
 
     selectedPhotoFile =
         null;
+
+
+    photoWasRemoved =
+        true;
 
 
     if (photoInput) {
@@ -1537,21 +1729,13 @@ function handlePhotoRemoval() {
     }
 
 
-    if (editingMemoryId) {
-
-        removeExistingPhoto =
-            true;
-
-    }
-
-
     hidePhotoPreview();
 
 }
 
 
 /* =========================================================
-   23. HIDE PHOTO PREVIEW
+   24. HIDE PHOTO PREVIEW
    ========================================================= */
 
 function hidePhotoPreview() {
@@ -1576,20 +1760,16 @@ function hidePhotoPreview() {
 
 
 /* =========================================================
-   24. UPLOAD PHOTO
+   25. UPLOAD PHOTO TO SUPABASE
    ========================================================= */
 
 async function uploadPhoto(
     file
 ) {
 
-    const bucketName =
+    const bucket =
         "memory-photos";
 
-
-    /*
-     * Create a unique filename.
-     */
 
     const extension =
         getFileExtension(
@@ -1597,25 +1777,14 @@ async function uploadPhoto(
         );
 
 
-    const randomPart =
-        Math.random()
+    const uniqueName =
+        `${Date.now()}-${Math.random()
             .toString(36)
-            .substring(
-                2,
-                10
-            );
-
-
-    const timestamp =
-        Date.now();
-
-
-    const fileName =
-        `${timestamp}-${randomPart}.${extension}`;
+            .substring(2, 10)}.${extension}`;
 
 
     const filePath =
-        `memories/${fileName}`;
+        `memories/${uniqueName}`;
 
 
     const {
@@ -1623,7 +1792,7 @@ async function uploadPhoto(
     } =
         await window.supabaseClient
             .storage
-            .from(bucketName)
+            .from(bucket)
             .upload(
                 filePath,
                 file,
@@ -1636,7 +1805,6 @@ async function uploadPhoto(
 
                     contentType:
                         file.type
-
                 }
             );
 
@@ -1649,7 +1817,8 @@ async function uploadPhoto(
         );
 
         throw new Error(
-            "Photo upload failed."
+            error.message ||
+            "Photograph upload failed."
         );
 
     }
@@ -1660,120 +1829,24 @@ async function uploadPhoto(
     } =
         window.supabaseClient
             .storage
-            .from(bucketName)
+            .from(bucket)
             .getPublicUrl(
                 filePath
             );
 
 
     if (
-        !data ||
-        !data.publicUrl
+        !data?.publicUrl
     ) {
 
         throw new Error(
-            "Unable to create photo URL."
+            "Unable to create photograph URL."
         );
 
     }
 
 
     return data.publicUrl;
-
-}
-
-
-/* =========================================================
-   25. DELETE MEMORY
-   ========================================================= */
-
-async function deleteMemory(
-    id
-) {
-
-    const memory =
-        allMemories.find(
-            item =>
-                String(item.id) ===
-                String(id)
-        );
-
-
-    if (!memory) {
-
-        throw new Error(
-            "Memory not found."
-        );
-
-    }
-
-
-    /*
-     * Delete database record first.
-     */
-
-    const {
-        error
-    } =
-        await window.supabaseClient
-            .from("memories")
-            .delete()
-            .eq(
-                "id",
-                id
-            );
-
-
-    if (error) {
-
-        throw error;
-
-    }
-
-
-    /*
-     * Remove associated photo
-     * from storage if possible.
-     */
-
-    if (
-        memory.photo_url
-    ) {
-
-        try {
-
-            await deletePhotoFromStorage(
-                memory.photo_url
-            );
-
-        } catch (
-            photoError
-        ) {
-
-            console.warn(
-                "Photo cleanup warning:",
-                photoError
-            );
-
-        }
-
-    }
-
-
-    showToast(
-        "Memory removed from our story.",
-        "success"
-    );
-
-
-    deletingMemoryId =
-        null;
-
-
-    closeDeleteModal();
-
-
-    await loadMemories();
 
 }
 
@@ -1786,28 +1859,19 @@ async function deletePhotoFromStorage(
     photoUrl
 ) {
 
-    const bucketName =
-        "memory-photos";
-
-
-    /*
-     * Only attempt deletion when
-     * the URL belongs to our bucket.
-     */
-
-    if (
-        !photoUrl.includes(
-            `/storage/v1/object/public/${bucketName}/`
-        )
-    ) {
+    if (!photoUrl) {
 
         return;
 
     }
 
 
+    const bucket =
+        "memory-photos";
+
+
     const marker =
-        `/storage/v1/object/public/${bucketName}/`;
+        `/storage/v1/object/public/${bucket}/`;
 
 
     const index =
@@ -1844,7 +1908,7 @@ async function deletePhotoFromStorage(
     } =
         await window.supabaseClient
             .storage
-            .from(bucketName)
+            .from(bucket)
             .remove([
                 filePath
             ]);
@@ -1860,77 +1924,59 @@ async function deletePhotoFromStorage(
 
 
 /* =========================================================
-   27. DELETE MODAL SETUP
+   27. DELETE MODAL
    ========================================================= */
 
 function setupDeleteModal() {
 
-    if (
-        deleteModalCancel
-    ) {
-
-        deleteModalCancel.addEventListener(
-            "click",
-            closeDeleteModal
-        );
-
-    }
+    cancelDeleteButton?.addEventListener(
+        "click",
+        closeDeleteModal
+    );
 
 
-    if (
-        deleteModalConfirm
-    ) {
-
-        deleteModalConfirm.addEventListener(
-            "click",
-            confirmDelete
-        );
-
-    }
+    confirmDeleteButton?.addEventListener(
+        "click",
+        confirmDelete
+    );
 
 
-    /*
-     * Close when clicking the backdrop.
-     */
+    deleteModal?.addEventListener(
+        "click",
+        event => {
 
-    if (deleteModal) {
+            if (
+                event.target ===
+                deleteModal
+            ) {
 
-        deleteModal.addEventListener(
-            "click",
-            event => {
-
-                if (
-                    event.target ===
-                    deleteModal
-                ) {
-
-                    closeDeleteModal();
-
-                }
+                closeDeleteModal();
 
             }
-        );
 
-    }
+        }
+    );
 
-
-    /*
-     * Escape key.
-     */
 
     document.addEventListener(
         "keydown",
         event => {
 
             if (
-                event.key === "Escape" &&
-                deleteModal &&
-                !deleteModal.classList.contains(
-                    "hidden"
-                )
+                event.key ===
+                "Escape"
             ) {
 
-                closeDeleteModal();
+                if (
+                    deleteModal &&
+                    !deleteModal.classList.contains(
+                        "hidden"
+                    )
+                ) {
+
+                    closeDeleteModal();
+
+                }
 
             }
 
@@ -1967,31 +2013,26 @@ function openDeleteModal(
         memory.id;
 
 
-    if (deleteModal) {
+    if (deleteModalText) {
 
-        deleteModal.classList.remove(
-            "hidden"
-        );
-
-
-        deleteModal.setAttribute(
-            "aria-hidden",
-            "false"
-        );
+        deleteModalText.textContent =
+            `"${memory.title || "This memory"}" will be removed from your private archive.`;
 
     }
 
 
-    if (
-        deleteModalConfirm
-    ) {
+    deleteModal?.classList.remove(
+        "hidden"
+    );
 
-        deleteModalConfirm.disabled =
-            false;
 
-        deleteModalConfirm.focus();
+    deleteModal?.setAttribute(
+        "aria-hidden",
+        "false"
+    );
 
-    }
+
+    confirmDeleteButton?.focus();
 
 }
 
@@ -2006,19 +2047,15 @@ function closeDeleteModal() {
         null;
 
 
-    if (deleteModal) {
-
-        deleteModal.classList.add(
-            "hidden"
-        );
+    deleteModal?.classList.add(
+        "hidden"
+    );
 
 
-        deleteModal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-    }
+    deleteModal?.setAttribute(
+        "aria-hidden",
+        "true"
+    );
 
 }
 
@@ -2040,51 +2077,100 @@ async function confirmDelete() {
         deletingMemoryId;
 
 
-    if (deleteModalConfirm) {
+    confirmDeleteButton.disabled =
+        true;
 
-        deleteModalConfirm.disabled =
-            true;
 
-        deleteModalConfirm.textContent =
-            "Deleting...";
-
-    }
+    confirmDeleteButton.textContent =
+        "Removing...";
 
 
     try {
 
-        await deleteMemory(
-            id
+        const memory =
+            allMemories.find(
+                item =>
+                    String(item.id) ===
+                    String(id)
+            );
+
+
+        const {
+            error
+        } =
+            await window.supabaseClient
+                .from("memories")
+                .delete()
+                .eq(
+                    "id",
+                    id
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        if (
+            memory?.photo_url
+        ) {
+
+            try {
+
+                await deletePhotoFromStorage(
+                    memory.photo_url
+                );
+
+            } catch (
+                photoError
+            ) {
+
+                console.warn(
+                    "Photo cleanup warning:",
+                    photoError
+                );
+
+            }
+
+        }
+
+
+        closeDeleteModal();
+
+
+        showToast(
+            "Memory removed from our story.",
+            "success"
         );
+
+
+        await loadMemories();
+
 
     } catch (error) {
 
         console.error(
-            "Delete memory error:",
+            "Delete error:",
             error
         );
 
+
         showToast(
-            error?.message ||
-            "Unable to delete memory.",
+            error.message ||
+            "Unable to remove memory.",
             "error"
         );
 
-        closeDeleteModal();
-
     } finally {
 
-        if (
-            deleteModalConfirm
-        ) {
+        confirmDeleteButton.disabled =
+            false;
 
-            deleteModalConfirm.disabled =
-                false;
-
-            deleteModalConfirm.textContent =
-                "Delete Memory";
-
-        }
+        confirmDeleteButton.textContent =
+            "Remove Memory";
 
     }
 
@@ -2106,26 +2192,73 @@ function setupSearch() {
 
     memorySearch.addEventListener(
         "input",
-        renderMemories
+        () => {
+
+            updateClearSearch();
+
+            renderMemories();
+
+        }
     );
+
+
+    clearSearch?.addEventListener(
+        "click",
+        () => {
+
+            memorySearch.value =
+                "";
+
+            updateClearSearch();
+
+            renderMemories();
+
+            memorySearch.focus();
+
+        }
+    );
+
+
+    updateClearSearch();
 
 }
 
 
 /* =========================================================
-   32. CATEGORY FILTER
+   32. CLEAR SEARCH BUTTON
    ========================================================= */
 
-function setupCategoryFilter() {
+function updateClearSearch() {
 
-    if (!categoryFilter) {
+    if (!clearSearch) {
 
         return;
 
     }
 
 
-    categoryFilter.addEventListener(
+    const hasSearch =
+        Boolean(
+            memorySearch?.value
+                ?.trim()
+        );
+
+
+    clearSearch.classList.toggle(
+        "hidden",
+        !hasSearch
+    );
+
+}
+
+
+/* =========================================================
+   33. FILTERS
+   ========================================================= */
+
+function setupFilters() {
+
+    categoryFilter?.addEventListener(
         "change",
         renderMemories
     );
@@ -2134,19 +2267,12 @@ function setupCategoryFilter() {
 
 
 /* =========================================================
-   33. SORTING
+   34. SORTING
    ========================================================= */
 
 function setupSorting() {
 
-    if (!sortMemories) {
-
-        return;
-
-    }
-
-
-    sortMemories.addEventListener(
+    sortOrder?.addEventListener(
         "change",
         renderMemories
     );
@@ -2155,19 +2281,308 @@ function setupSorting() {
 
 
 /* =========================================================
-   34. LOGOUT
+   35. VISIBLE COUNT
    ========================================================= */
 
-function setupLogout() {
+function updateVisibleCount(
+    count
+) {
 
-    if (!logoutButton) {
+    if (!visibleCount) {
 
         return;
 
     }
 
 
-    logoutButton.addEventListener(
+    visibleCount.textContent =
+        `${count} ${
+            count === 1
+                ? "memory"
+                : "memories"
+        }`;
+
+}
+
+
+/* =========================================================
+   36. SEARCH RESULT MESSAGE
+   ========================================================= */
+
+function updateSearchResult(
+    count,
+    searchTerm
+) {
+
+    if (!archiveResultInfo) {
+
+        return;
+
+    }
+
+
+    if (!searchTerm) {
+
+        archiveResultInfo.textContent =
+            `${count} ${
+                count === 1
+                    ? "memory"
+                    : "memories"
+            }`;
+
+        return;
+
+    }
+
+
+    if (count === 0) {
+
+        archiveResultInfo.innerHTML =
+            `No memories found for <strong>"${escapeHTML(
+                searchTerm
+            )}"</strong>`;
+
+        return;
+
+    }
+
+
+    archiveResultInfo.innerHTML =
+        `${count} ${
+            count === 1
+                ? "memory"
+                : "memories"
+        } found for <strong>"${escapeHTML(
+            searchTerm
+        )}"</strong>`;
+
+}
+
+
+/* =========================================================
+   37. LOADING STATE
+   ========================================================= */
+
+function showLoading() {
+
+    if (!memoriesList) {
+
+        return;
+
+    }
+
+
+    memoriesList.innerHTML = `
+
+        <div class="loading">
+
+            <div
+                class="state-heart"
+                aria-hidden="true"
+            >
+                ♡
+            </div>
+
+            <div
+                class="state-spinner"
+                aria-hidden="true"
+            ></div>
+
+            <p>
+                Gathering your memories...
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   38. EMPTY STATE
+   ========================================================= */
+
+function showEmpty() {
+
+    if (!memoriesList) {
+
+        return;
+
+    }
+
+
+    memoriesList.innerHTML = `
+
+        <div class="empty-state">
+
+            <div aria-hidden="true">
+                ♡
+            </div>
+
+            <h3>
+                Nothing here yet.
+            </h3>
+
+            <p>
+                Some stories are still waiting
+                to be written.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   39. ERROR STATE
+   ========================================================= */
+
+function showError(
+    message
+) {
+
+    if (!memoriesList) {
+
+        return;
+
+    }
+
+
+    memoriesList.innerHTML = `
+
+        <div class="error">
+
+            <div
+                class="state-heart"
+                aria-hidden="true"
+            >
+                ♡
+            </div>
+
+            <p>
+                ${escapeHTML(
+                    message
+                )}
+            </p>
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="retryMemoriesButton"
+            >
+                Try Again
+            </button>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "retryMemoriesButton"
+        )
+        ?.addEventListener(
+            "click",
+            loadMemories
+        );
+
+}
+
+
+/* =========================================================
+   40. FORM MESSAGE
+   ========================================================= */
+
+function showFormMessage(
+    message
+) {
+
+    if (!formMessage) {
+
+        return;
+
+    }
+
+
+    formMessage.textContent =
+        message;
+
+}
+
+
+/* =========================================================
+   41. TOAST
+   ========================================================= */
+
+function showToast(
+    message,
+    type = "info"
+) {
+
+    if (!toast) {
+
+        console.log(
+            `[${type}] ${message}`
+        );
+
+        return;
+
+    }
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.remove(
+        "show"
+    );
+
+
+    /*
+     * Force browser to recognize
+     * the state change before adding show.
+     */
+
+    void toast.offsetWidth;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        showToast.timeout
+    );
+
+
+    showToast.timeout =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4000
+        );
+
+}
+
+
+/* =========================================================
+   42. LOGOUT
+   ========================================================= */
+
+function setupLogout() {
+
+    logoutButton?.addEventListener(
         "click",
         handleLogout
     );
@@ -2182,8 +2597,17 @@ async function handleLogout() {
         logoutButton.disabled =
             true;
 
-        logoutButton.textContent =
-            "Leaving...";
+        const text =
+            logoutButton.querySelector(
+                "span"
+            );
+
+        if (text) {
+
+            text.textContent =
+                "Leaving...";
+
+        }
 
     }
 
@@ -2208,6 +2632,7 @@ async function handleLogout() {
         window.location.href =
             "login.html";
 
+
     } catch (error) {
 
         console.error(
@@ -2227,8 +2652,17 @@ async function handleLogout() {
             logoutButton.disabled =
                 false;
 
-            logoutButton.textContent =
-                "Logout";
+            const text =
+                logoutButton.querySelector(
+                    "span"
+                );
+
+            if (text) {
+
+                text.textContent =
+                    "Log Out";
+
+            }
 
         }
 
@@ -2238,218 +2672,7 @@ async function handleLogout() {
 
 
 /* =========================================================
-   35. ARCHIVE RESULT INFO
-   ========================================================= */
-
-function updateArchiveResultInfo(
-    count,
-    searchTerm
-) {
-
-    if (!archiveResultInfo) {
-
-        return;
-
-    }
-
-
-    const hasSearch =
-        Boolean(
-            searchTerm
-        );
-
-
-    if (!hasSearch) {
-
-        archiveResultInfo.textContent =
-            `${count} ${count === 1 ? "memory" : "memories"}`;
-
-        return;
-
-    }
-
-
-    if (count === 0) {
-
-        archiveResultInfo.innerHTML =
-            `No memories found for <strong>"${escapeHTML(
-                searchTerm
-            )}"</strong>`;
-
-        return;
-
-    }
-
-
-    if (count === 1) {
-
-        archiveResultInfo.innerHTML =
-            `1 memory found for <strong>"${escapeHTML(
-                searchTerm
-            )}"</strong>`;
-
-        return;
-
-    }
-
-
-    archiveResultInfo.innerHTML =
-        `${count} memories found for <strong>"${escapeHTML(
-            searchTerm
-        )}"</strong>`;
-
-}
-
-
-/* =========================================================
-   36. LOADING STATE
-   ========================================================= */
-
-function showLoadingState() {
-
-    if (!memoryList) {
-
-        return;
-
-    }
-
-
-    memoryList.innerHTML = `
-
-        <div class="admin-loading-state">
-
-            <div
-                class="admin-loading-heart"
-                aria-hidden="true"
-            >
-                ♡
-            </div>
-
-            <div
-                class="admin-loading-spinner"
-                aria-hidden="true"
-            ></div>
-
-            <p>
-                Gathering our memories...
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   37. EMPTY STATE
-   ========================================================= */
-
-function showEmptyState() {
-
-    if (!memoryList) {
-
-        return;
-
-    }
-
-
-    memoryList.innerHTML = `
-
-        <div class="admin-empty-state">
-
-            <div
-                class="admin-empty-icon"
-                aria-hidden="true"
-            >
-                ♡
-            </div>
-
-            <h3>
-                Nothing here yet.
-            </h3>
-
-            <p>
-                Some stories are still waiting
-                to be written.
-            </p>
-
-            <span>
-                Try changing your search or filter.
-            </span>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   38. ERROR STATE
-   ========================================================= */
-
-function showErrorState(
-    message
-) {
-
-    if (!memoryList) {
-
-        return;
-
-    }
-
-
-    memoryList.innerHTML = `
-
-        <div class="admin-error-state">
-
-            <div
-                class="admin-error-icon"
-                aria-hidden="true"
-            >
-                ♡
-            </div>
-
-            <h3>
-                Something went wrong.
-            </h3>
-
-            <p>
-                ${escapeHTML(
-                    message
-                )}
-            </p>
-
-            <button
-                type="button"
-                class="admin-retry-button"
-                id="retryLoadMemories"
-            >
-                Try Again
-            </button>
-
-        </div>
-
-    `;
-
-
-    const retryButton =
-        document.getElementById(
-            "retryLoadMemories"
-        );
-
-
-    retryButton?.addEventListener(
-        "click",
-        loadMemories
-    );
-
-}
-
-
-/* =========================================================
-   39. CATEGORY LABELS
+   43. CATEGORY LABEL
    ========================================================= */
 
 function getCategoryLabel(
@@ -2464,35 +2687,27 @@ function getCategoryLabel(
         milestone:
             "Milestone",
 
-        travel:
-            "Travel",
-
         date:
             "Date",
 
-        family:
-            "Family",
+        travel:
+            "Travel",
 
         celebration:
             "Celebration",
 
-        everyday:
-            "Everyday",
+        funny:
+            "Funny",
 
-        love:
-            "Love",
-
-        special:
-            "Special"
+        family:
+            "Family"
 
     };
 
 
     return (
         labels[
-            String(
-                category
-            ).toLowerCase()
+            category
         ] ||
         capitalize(
             category
@@ -2503,7 +2718,7 @@ function getCategoryLabel(
 
 
 /* =========================================================
-   40. CATEGORY ICONS
+   44. CATEGORY ICON
    ========================================================= */
 
 function getCategoryIcon(
@@ -2516,37 +2731,29 @@ function getCategoryIcon(
             "♡",
 
         milestone:
-            "✦",
+            "◇",
+
+        date:
+            "🌹",
 
         travel:
             "✈",
 
-        date:
-            "♧",
+        celebration:
+            "✦",
+
+        funny:
+            "☻",
 
         family:
-            "⌂",
-
-        celebration:
-            "✧",
-
-        everyday:
-            "☼",
-
-        love:
-            "♡",
-
-        special:
-            "✦"
+            "⌂"
 
     };
 
 
     return (
         icons[
-            String(
-                category
-            ).toLowerCase()
+            category
         ] ||
         "♡"
     );
@@ -2555,14 +2762,14 @@ function getCategoryIcon(
 
 
 /* =========================================================
-   41. DATE PARSING
+   45. DATE PARSER
    ========================================================= */
 
 function parseDate(
-    dateValue
+    value
 ) {
 
-    if (!dateValue) {
+    if (!value) {
 
         return 0;
 
@@ -2571,35 +2778,32 @@ function parseDate(
 
     const date =
         new Date(
-            `${dateValue}T00:00:00`
+            `${value}T00:00:00`
         );
 
 
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return 0;
-
-    }
+    const time =
+        date.getTime();
 
 
-    return date.getTime();
+    return Number.isNaN(
+        time
+    )
+        ? 0
+        : time;
 
 }
 
 
 /* =========================================================
-   42. DATE FORMATTING
+   46. DATE FORMATTER
    ========================================================= */
 
-function formatDisplayDate(
-    dateValue
+function formatDate(
+    value
 ) {
 
-    if (!dateValue) {
+    if (!value) {
 
         return "";
 
@@ -2608,7 +2812,7 @@ function formatDisplayDate(
 
     const date =
         new Date(
-            `${dateValue}T00:00:00`
+            `${value}T00:00:00`
         );
 
 
@@ -2618,7 +2822,7 @@ function formatDisplayDate(
         )
     ) {
 
-        return dateValue;
+        return value;
 
     }
 
@@ -2643,7 +2847,7 @@ function formatDisplayDate(
 
 
 /* =========================================================
-   43. FILE EXTENSION
+   47. FILE EXTENSION
    ========================================================= */
 
 function getFileExtension(
@@ -2665,19 +2869,22 @@ function getFileExtension(
     }
 
 
-    return parts
-        .pop()
-        .toLowerCase()
-        .replace(
-            /[^a-z0-9]/g,
-            ""
-        ) || "jpg";
+    return (
+        parts
+            .pop()
+            .toLowerCase()
+            .replace(
+                /[^a-z0-9]/g,
+                ""
+            ) ||
+        "jpg"
+    );
 
 }
 
 
 /* =========================================================
-   44. CAPITALIZE
+   48. CAPITALIZE
    ========================================================= */
 
 function capitalize(
@@ -2706,7 +2913,7 @@ function capitalize(
 
 
 /* =========================================================
-   45. ESCAPE HTML
+   49. ESCAPE HTML
    ========================================================= */
 
 function escapeHTML(
@@ -2741,7 +2948,7 @@ function escapeHTML(
 
 
 /* =========================================================
-   46. ESCAPE ATTRIBUTE
+   50. ESCAPE ATTRIBUTE
    ========================================================= */
 
 function escapeAttribute(
@@ -2756,194 +2963,7 @@ function escapeAttribute(
 
 
 /* =========================================================
-   47. TOAST SYSTEM
-   ========================================================= */
-
-function showToast(
-    message,
-    type = "info"
-) {
-
-    /*
-     * If the new toast container exists,
-     * use it.
-     */
-
-    if (toastContainer) {
-
-        const toast =
-            document.createElement(
-                "div"
-            );
-
-
-        toast.className =
-            `admin-toast admin-toast-${type}`;
-
-
-        const icon =
-            getToastIcon(
-                type
-            );
-
-
-        toast.innerHTML = `
-
-            <span
-                class="admin-toast-icon"
-                aria-hidden="true"
-            >
-                ${icon}
-            </span>
-
-            <span
-                class="admin-toast-message"
-            >
-                ${escapeHTML(
-                    message
-                )}
-            </span>
-
-            <button
-                type="button"
-                class="admin-toast-close"
-                aria-label="Dismiss notification"
-            >
-                ×
-            </button>
-
-        `;
-
-
-        toastContainer.appendChild(
-            toast
-        );
-
-
-        const closeButton =
-            toast.querySelector(
-                ".admin-toast-close"
-            );
-
-
-        closeButton?.addEventListener(
-            "click",
-            () => {
-
-                removeToast(
-                    toast
-                );
-
-            }
-        );
-
-
-        requestAnimationFrame(
-            () => {
-
-                toast.classList.add(
-                    "show"
-                );
-
-            }
-        );
-
-
-        setTimeout(
-            () => {
-
-                removeToast(
-                    toast
-                );
-
-            },
-            4200
-        );
-
-
-        return;
-
-    }
-
-
-    /*
-     * Fallback for old HTML.
-     */
-
-    console.log(
-        `[${type}] ${message}`
-    );
-
-}
-
-
-/* =========================================================
-   48. TOAST ICON
-   ========================================================= */
-
-function getToastIcon(
-    type
-) {
-
-    const icons = {
-
-        success:
-            "✓",
-
-        error:
-            "!",
-
-        info:
-            "♡",
-
-        warning:
-            "!"
-
-    };
-
-
-    return (
-        icons[type] ||
-        icons.info
-    );
-
-}
-
-
-/* =========================================================
-   49. REMOVE TOAST
-   ========================================================= */
-
-function removeToast(
-    toast
-) {
-
-    if (!toast) {
-
-        return;
-
-    }
-
-
-    toast.classList.remove(
-        "show"
-    );
-
-
-    setTimeout(
-        () => {
-
-            toast.remove();
-
-        },
-        250
-    );
-
-}
-
-
-/* =========================================================
-   50. GLOBAL AUTH STATE LISTENER
+   51. AUTH STATE LISTENER
    ========================================================= */
 
 if (
@@ -2954,8 +2974,7 @@ if (
         .auth
         .onAuthStateChange(
             (
-                event,
-                session
+                event
             ) => {
 
                 if (
