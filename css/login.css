@@ -173,9 +173,9 @@ body {
 
     position: relative;
 
-    width: min(1080px, 100%);
+    width: min(760px, 100%);
 
-    min-height: 620px;
+    min-height: 640px;
 
     display: flex;
 
@@ -189,249 +189,6 @@ body {
 
 
 /* =========================================================
-   STORY CARD — REAR CARD
-   ========================================================= */
-
-.story-card {
-
-    position: absolute;
-
-    left: 20px;
-
-    width: 500px;
-
-    min-height: 470px;
-
-    padding: 55px;
-
-    border: 1px solid
-        rgba(201, 166, 107, 0.16);
-
-    border-radius: 8px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(47, 20, 31, 0.96),
-            rgba(20, 9, 14, 0.98)
-        );
-
-    box-shadow:
-
-        0 50px 100px
-            rgba(0, 0, 0, 0.55),
-
-        0 20px 40px
-            rgba(0, 0, 0, 0.28),
-
-        inset 0 1px 0
-            rgba(255, 255, 255, 0.035);
-
-    transform:
-        translate3d(0, 0, -40px)
-        rotateY(7deg)
-        rotateZ(-1.2deg);
-
-    transform-style: preserve-3d;
-
-    z-index: 1;
-
-}
-
-
-/* Gold edge */
-
-.story-card::before {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 12px;
-
-    border: 1px solid
-        rgba(201, 166, 107, 0.08);
-
-    border-radius: 5px;
-
-    pointer-events: none;
-
-}
-
-
-/* Story content */
-
-.story-card-inner {
-
-    position: relative;
-
-    height: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-}
-
-
-/* Eyebrow */
-
-.story-eyebrow {
-
-    margin: 0 0 18px;
-
-    color: var(--gold);
-
-    font-size: 0.62rem;
-
-    font-weight: 400;
-
-    letter-spacing: 0.28em;
-
-}
-
-
-/* Main story heading */
-
-.story-card h1 {
-
-    margin: 0;
-
-    color: var(--ivory);
-
-    font-family:
-        "Cormorant Garamond",
-        serif;
-
-    font-size: clamp(
-        3rem,
-        5vw,
-        4.3rem
-    );
-
-    font-weight: 400;
-
-    line-height: 0.94;
-
-    letter-spacing: -0.025em;
-
-}
-
-
-/* Heart */
-
-.story-heart {
-
-    margin: 34px 0;
-
-    color: var(--gold-light);
-
-    font-family:
-        "Cormorant Garamond",
-        serif;
-
-    font-size: 2.2rem;
-
-    line-height: 1;
-
-}
-
-
-/* Dates */
-
-.story-dates {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 15px;
-
-}
-
-
-.story-date {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 4px;
-
-}
-
-
-.story-date span {
-
-    color:
-        rgba(231, 221, 211, 0.42);
-
-    font-size: 0.58rem;
-
-    letter-spacing: 0.17em;
-
-}
-
-
-.story-date strong {
-
-    color:
-        rgba(231, 221, 211, 0.78);
-
-    font-family:
-        "Cormorant Garamond",
-        serif;
-
-    font-size: 1.08rem;
-
-    font-weight: 400;
-
-    letter-spacing: 0.05em;
-
-}
-
-
-/* Date divider */
-
-.story-divider {
-
-    width: 34px;
-
-    height: 1px;
-
-    margin: 2px 0;
-
-    background:
-        rgba(201, 166, 107, 0.30);
-
-}
-
-
-/* Story footer */
-
-.story-footer {
-
-    margin: 38px 0 0;
-
-    color:
-        rgba(231, 221, 211, 0.30);
-
-    font-family:
-        "Cormorant Garamond",
-        serif;
-
-    font-size: 0.95rem;
-
-    font-style: italic;
-
-    letter-spacing: 0.02em;
-
-}
-
-
-/* =========================================================
    LOGIN CARD — FRONT CARD
    ========================================================= */
 
@@ -439,11 +196,11 @@ body {
 
     position: relative;
 
-    width: 430px;
+    width: 460px;
 
-    min-height: 540px;
+    min-height: 580px;
 
-    margin-left: 410px;
+    margin-left: 0px;
 
     padding: 1px;
 
@@ -514,9 +271,9 @@ body {
 
     position: relative;
 
-    min-height: 538px;
+    min-height: 578px;
 
-    padding: 55px 52px 42px;
+    padding: 62px 56px 46px;
 
     display: flex;
 
@@ -1053,29 +810,13 @@ body {
     }
 
 
-    .story-card {
-
-        width: 430px;
-
-        left: 0;
-
-        padding: 45px;
-
-        transform:
-            translate3d(0, 0, -35px)
-            rotateY(5deg)
-            rotateZ(-1deg);
-
-    }
-
-
     .login-card {
 
-        width: 400px;
+    width: min(460px, 100%);
 
-        margin-left: 330px;
+    margin-left: 0;
 
-    }
+}
 
 }
 
@@ -1119,61 +860,6 @@ body {
         perspective: none;
 
     }
-
-
-    /* Rear card becomes upper story card */
-
-    .story-card {
-
-        position: relative;
-
-        left: auto;
-
-        width: min(100%, 440px);
-
-        min-height: auto;
-
-        padding: 38px 30px 34px;
-
-        transform: none;
-
-        z-index: 1;
-
-    }
-
-
-    .story-card-inner {
-
-        display: block;
-
-    }
-
-
-    .story-card h1 {
-
-        font-size:
-            clamp(
-                2.7rem,
-                13vw,
-                3.5rem
-            );
-
-    }
-
-
-    .story-heart {
-
-        margin: 25px 0;
-
-    }
-
-
-    .story-footer {
-
-        margin-top: 27px;
-
-    }
-
 
     /* Login card */
 
@@ -1239,22 +925,6 @@ body {
             30px 13px 70px;
 
     }
-
-
-    .story-card {
-
-        padding:
-            32px 23px 29px;
-
-    }
-
-
-    .story-card h1 {
-
-        font-size: 2.65rem;
-
-    }
-
 
     .login-card-inner {
 
@@ -1399,84 +1069,12 @@ body {
    INITIAL STATE
    ========================================================= */
 
-.story-card,
 .login-card,
 .page-signature {
 
     opacity: 0;
 
 }
-
-
-/* =========================================================
-   STORY CARD ENTRANCE
-   ========================================================= */
-
-.story-card {
-
-    transition:
-        opacity 0.9s ease,
-        transform 1.05s
-        cubic-bezier(
-            0.22,
-            1,
-            0.36,
-            1
-        );
-
-}
-
-
-.login-page-ready .story-card {
-
-    animation:
-        storyEntrance
-        1.1s
-        cubic-bezier(
-            0.22,
-            1,
-            0.36,
-            1
-        )
-        forwards;
-
-}
-
-
-@keyframes storyEntrance {
-
-    from {
-
-        opacity: 0;
-
-        transform:
-            translate3d(
-                -55px,
-                30px,
-                -70px
-            )
-            rotateY(11deg)
-            rotateZ(-2deg);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform:
-            translate3d(
-                0,
-                0,
-                -40px
-            )
-            rotateY(7deg)
-            rotateZ(-1.2deg);
-
-    }
-
-}
-
 
 /* =========================================================
    LOGIN CARD ENTRANCE
@@ -1586,85 +1184,6 @@ body {
     }
 
 }
-
-
-/* =========================================================
-   STORY CONTENT REVEAL
-   ========================================================= */
-
-.story-eyebrow,
-.story-card h1,
-.story-heart,
-.story-dates,
-.story-footer {
-
-    opacity: 0;
-
-    transform:
-        translateY(10px);
-
-}
-
-
-.login-page-ready .story-eyebrow {
-
-    animation:
-        contentReveal
-        0.55s
-        0.55s
-        ease-out
-        forwards;
-
-}
-
-
-.login-page-ready .story-card h1 {
-
-    animation:
-        contentReveal
-        0.65s
-        0.67s
-        ease-out
-        forwards;
-
-}
-
-
-.login-page-ready .story-heart {
-
-    animation:
-        storyHeartReveal
-        0.55s
-        0.94s
-        ease-out
-        forwards;
-
-}
-
-
-.login-page-ready .story-dates {
-
-    animation:
-        contentReveal
-        0.65s
-        1.08s
-        ease-out
-        forwards;
-
-}
-
-
-.login-page-ready .story-footer {
-
-    animation:
-        contentReveal
-        0.55s
-        1.30s
-        ease-out
-        forwards;
-
-}
-
 
 /* =========================================================
    LOGIN CONTENT REVEAL
@@ -1937,54 +1456,6 @@ body {
 
 }
 
-
-/* =========================================================
-   STORY HEART — SUBTLE GLOW
-   ========================================================= */
-
-.login-page-ready .story-heart {
-
-    animation:
-        storyHeartReveal
-        0.55s
-        0.94s
-        ease-out
-        forwards,
-        storyHeartGlow
-        5.5s
-        2s
-        ease-in-out
-        infinite;
-
-}
-
-
-@keyframes storyHeartGlow {
-
-    0%,
-    100% {
-
-        text-shadow:
-            none;
-
-    }
-
-    50% {
-
-        text-shadow:
-            0 0 18px
-            rgba(
-                225,
-                197,
-                141,
-                0.20
-            );
-
-    }
-
-}
-
-
 /* =========================================================
    LOGIN CARD — VERY SUBTLE FLOAT
    ========================================================= */
@@ -2193,11 +1664,6 @@ body {
     .story-card,
     .login-card,
     .page-signature,
-    .story-eyebrow,
-    .story-card h1,
-    .story-heart,
-    .story-dates,
-    .story-footer,
     .login-card .heart,
     .login-eyebrow,
     .login-card h2,
@@ -2217,6 +1683,118 @@ body {
 
         transform:
             none !important;
+
+    }
+
+}
+
+/* =========================================================
+   SINGLE CARD — CINEMATIC AMBIENT HALO
+   ========================================================= */
+
+.login-stage::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(105, 35, 57, 0.16),
+            rgba(105, 35, 57, 0.05) 38%,
+            transparent 70%
+        );
+
+    filter: blur(18px);
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    animation:
+        stageHaloPulse
+        8s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes stageHaloPulse {
+
+    0%,
+    100% {
+
+        opacity: 0.65;
+
+        transform:
+            translate(-50%, -50%)
+            scale(0.96);
+
+    }
+
+    50% {
+
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%)
+            scale(1.04);
+
+    }
+
+}
+
+/* =========================================================
+   SINGLE CARD — SUBTLE FLOAT
+   ========================================================= */
+
+.login-page-ready .login-card {
+
+    animation:
+        loginEntrance
+        1.1s
+        0.16s
+        cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        )
+        forwards,
+        loginCardFloat
+        8s
+        2s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes loginCardFloat {
+
+    0%,
+    100% {
+
+        margin-top: 0;
+
+    }
+
+    50% {
+
+        margin-top: -3px;
 
     }
 
